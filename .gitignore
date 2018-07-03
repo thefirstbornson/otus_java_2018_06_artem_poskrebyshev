@@ -2,10 +2,8 @@
 **.iml
 **/target
 
-#Gradle
-**/build/
-**/gradle/
-**/.gradle/
+**/log/
+**/target/
 
 #common
 **/out

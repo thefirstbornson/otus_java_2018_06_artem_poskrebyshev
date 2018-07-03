@@ -1,4 +1,4 @@
-package ru.otis.hw011;
+package ru.otus.hw011;
 
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.*;

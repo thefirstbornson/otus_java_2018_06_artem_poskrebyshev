@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/HW011MavenGit/HW01.1-MavenGit.iml" filepath="$PROJECT_DIR$/HW011MavenGit/HW01.1-MavenGit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mavenexample/maven-example.iml" filepath="$PROJECT_DIR$/mavenexample/maven-example.iml" />
       <module fileurl="file://$PROJECT_DIR$/otus_java_2018_06_artem_poskrebyshev.iml" filepath="$PROJECT_DIR$/otus_java_2018_06_artem_poskrebyshev.iml" />
     </modules>
   </component>

@@ -79,6 +79,9 @@
             </configuration>
         </plugin>
 
+        <!-- ProGuard obfuscation plugin -->
+
+
     </plugins>
     </build>
 </project>

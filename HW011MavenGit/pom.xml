@@ -80,7 +80,52 @@
         </plugin>
 
         <!-- ProGuard obfuscation plugin -->
+        <plugin>
+            <groupId>com.github.wvengen</groupId>
+            <artifactId>proguard-maven-plugin</artifactId>
+            <version>2.0.10</version>
+            <executions>
+                <execution>
+                    <phase>package</phase>
+                    <goals>
+                        <goal>proguard</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <obfuscate>true</obfuscate>
+                <injar>${project.build.finalName}-jar-with-dependencies.jar</injar>
+                <outjar>${project.build.finalName}-small.jar</outjar>
+                <includeDependency>true</includeDependency>
+                <options>
+                    <option>-keep public class ru.otus.hw011.Main { *; }</option>
+                    <option>-dontwarn org.apache.**</option>
+                    <option>-dontwarn com.google.**</option>
+                    <option>-dontwarn afu.org.checkerframework.**</option>
+                    <option>-dontwarn org.checkerframework.**</option>
 
+                </options>
+                <libs>
+                    <lib>${java.home}/jmods/java.base.jmod</lib>
+                </libs>
+                <archive>
+                    <manifest>
+                        <mainClass>ru.otus.hw011.Main</mainClass>
+                    </manifest>
+                </archive>
+
+            </configuration>
+            <dependencies>
+
+                <dependency>
+                    <groupId>net.sf.proguard</groupId>
+                    <artifactId>proguard-base</artifactId>
+                    <version>6.0.2</version>
+                    <scope>runtime</scope>
+                </dependency>
+
+            </dependencies>
+        </plugin>
 
     </plugins>
     </build>

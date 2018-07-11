@@ -2,8 +2,9 @@
 Домашние задания курса Разработчик Java 
 
 Группа 2018-06
+
 Студент
 
-Artem Poskrebyshev(Артём Поскрёбышев)
+Artem Poskrebyshev (Артём Поскрёбышев)
 
 thefirstbornson@gmail.com

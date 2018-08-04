@@ -1,11 +1,20 @@
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
-       // System.out.println(new MyArrayLIst<>().size());
+
         MyArrayList<Integer> myArrList= new MyArrayList<>();
-        Collections.addAll(myArrList, 4, 8, 15, 16, 23, 42);
+
+        //Collections.addAll
+        Collections.addAll(myArrList, 122, 56, 4, 8, 15, 16, 23, 0,123);
+         System.out.println(Arrays.toString(myArrList.toArray()));
+        // Collections.copy
+         List<Integer> myArrDest = Arrays.asList(new Integer[myArrList.size()]);
+        Collections.copy(myArrDest,myArrList);
+         System.out.println(Arrays.toString(myArrDest.toArray()));
+        //Collections.sort
+        Collections.sort(myArrList, Comparator.reverseOrder());
+         System.out.println(Arrays.toString(myArrList.toArray()));
 
     }
 }

@@ -4,19 +4,26 @@ import java.util.function.Predicate;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 
-public class MyArrayList <T> implements List {
-    Object[] elements;
+public class MyArrayList <T> implements List<T> {
+
+    private Object[] elements={};
     private int size;
 
-    private Object[] grow(int minCapacity) {
-        return elements = Arrays.copyOf(elements,
-                newCapacity(minCapacity));
+    public MyArrayList(){
+
     }
 
+    private T elements(int index) {
+        return (T) elements[index];
+    }
+
+    private Object[] grow() {
+        return elements = Arrays.copyOf(elements,size + 1);
+    }
 
     public int size() {
-        if (true) throw new RuntimeException();
-        else return 0 ;
+        //if (true) throw new RuntimeException();
+        return this.size ;
     }
 
     public boolean isEmpty() {
@@ -35,37 +42,25 @@ public class MyArrayList <T> implements List {
     }
 
     public void forEach(Consumer action) {
-
+        if (true) throw new RuntimeException();
     }
 
     public Object[] toArray() {
-        if (true) throw new RuntimeException();
-        else return new Object[0];
+        return Arrays.copyOf(elements, size);
     }
 
-    public boolean add(Object o) {
-        if (true) throw new RuntimeException();
-        else return false;
+    @Override
+    public boolean add(T e) {
+        add(e, elements, size);
+        return true;
     }
 
-    private void add(E e, Object[] elementData, int s) {
+
+    private void add(T e, Object[] elementData, int s) {
         if (s == elementData.length)
             elementData = grow();
         elementData[s] = e;
         size = s + 1;
-    }
-
-    /**
-     * Appends the specified element to the end of this list.
-     *
-     * @param e element to be appended to this list
-     * @return {@code true} (as specified by {@link Collection#add})
-     */
-    public boolean add(T e) {
-
-        add(e, elementData, size);
-
-        return true;
     }
 
     public boolean remove(Object o) {
@@ -89,32 +84,33 @@ public class MyArrayList <T> implements List {
     }
 
     public void replaceAll(UnaryOperator operator) {
-
+        throw new RuntimeException();
     }
 
     public void sort(Comparator c) {
-
+        Arrays.sort((T[]) elements, 0, size, c);
     }
 
     public void clear() {
-
+        throw new RuntimeException();
     }
 
-    public Object get(int index) {
-        if (true) throw new RuntimeException();
-        else return null;
+    public T get(int index) {
+        return elements(index);
     }
 
-    public Object set(int index, Object element) {
-        if (true) throw new RuntimeException();
-        else return null;
+    public T set(int index, Object element) {
+
+        T oldValue = elements(index);
+        elements [index] = element;
+        return oldValue;
     }
 
     public void add(int index, Object element) {
 
     }
 
-    public Object remove(int index) {
+    public T remove(int index) {
         if (true) throw new RuntimeException();
         else return null;
     }

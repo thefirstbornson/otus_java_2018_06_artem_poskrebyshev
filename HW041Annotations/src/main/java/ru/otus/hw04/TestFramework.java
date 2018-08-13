@@ -13,30 +13,24 @@ public class TestFramework {
 
     public void run (Class<?> klass){
         Method [] methods = klass.getDeclaredMethods();
+        List<Method> beforeMethods = calcAnnotatedMethods(methods, Before.class);
+        List<Method> afterMethods = calcAnnotatedMethods(methods, After.class);
         for (Method method:methods){
             if(method.isAnnotationPresent(Test.class)){
                 Object testObj = ReflectionHelper.instantiate(klass);
-                    beforeMethods(methods).forEach(metod->ReflectionHelper.callMethod(testObj,metod.getName()));
+                    beforeMethods
+                            .forEach(metod->ReflectionHelper.callMethod(testObj,metod.getName()));
                     ReflectionHelper.callMethod(testObj,method.getName());
-                    afterMethods(methods).forEach(metod->ReflectionHelper.callMethod(testObj,metod.getName()));
+                    afterMethods
+                            .forEach(metod->ReflectionHelper.callMethod(testObj,metod.getName()));
             }
         }
     }
 
-    private List<Method> beforeMethods (Method [] methods){
+    private List<Method> calcAnnotatedMethods (Method [] methods, Class annotationClass){
         ArrayList<Method> methodsList = new ArrayList<>();
         for (Method method:methods){
-            if(method.isAnnotationPresent(Before.class)){
-                methodsList.add(method);
-            }
-        }
-        return methodsList;
-    }
-
-    private  List<Method> afterMethods (Method [] methods){
-        List<Method> methodsList = new ArrayList<>();
-        for (Method method:methods){
-            if(method.isAnnotationPresent(After.class)){
+            if(method.isAnnotationPresent(annotationClass)){
                 methodsList.add(method);
             }
         }

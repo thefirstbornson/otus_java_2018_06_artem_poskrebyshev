@@ -15,9 +15,7 @@ public class SoftRefCacheEngImpl<K, V> implements SoftRefCacheEng<K, V> {
 
     public V get(K key) {
         V value=null;
-
         SoftReference<V> reference = mCache.get(key);
-
         value=reference.get();
 
         if (value != null ){

@@ -30,14 +30,18 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
         this.isEternal = lifeTimeMs == 0 && idleTimeMs == 0 || isEternal;
     }
 
-    public void put(MyElement<K, V> element) {
+
+
+//    public void put(MyElement<K, V> element) {
+    public void  put(K key, V value) {
         if (elements.size() == maxElements) {
             K firstKey = elements.keySet().iterator().next();
             elements.remove(firstKey);
         }
+        MyElement<K, V>  element = new MyElement<>(key, value);
 
-        K key = element.getKey();
-        elements.put(key, element);
+        K k = element.getKey();
+        elements.put(k, element);
 
         if (!isEternal) {
             if (lifeTimeMs != 0) {
@@ -51,15 +55,18 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
         }
     }
 
-    public MyElement<K, V> get(K key) {
+
+    public  V get(K key) {
+        V value=null;
         MyElement<K, V> element = elements.get(key);
         if (element != null) {
+            value=element.getValue();
             hit++;
             element.setAccessed();
         } else {
             miss++;
         }
-        return element;
+        return value;
     }
 
     public int getHitCount() {

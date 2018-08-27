@@ -1,13 +1,10 @@
 package ru.otus.hw06;
 
-/**
- * Created by tully.
- */
 public interface CacheEngine<K, V> {
 
-    void put(MyElement<K, V> element);
+    void put(K key, V value);
 
-    MyElement<K, V> get(K key);
+    V get(K key);
 
     int getHitCount();
 

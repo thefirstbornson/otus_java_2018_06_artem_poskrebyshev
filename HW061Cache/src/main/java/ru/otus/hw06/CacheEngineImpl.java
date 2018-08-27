@@ -32,7 +32,6 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
 
 
 
-//    public void put(MyElement<K, V> element) {
     public void  put(K key, V value) {
         if (elements.size() == maxElements) {
             K firstKey = elements.keySet().iterator().next();
@@ -59,8 +58,9 @@ public class CacheEngineImpl<K, V> implements CacheEngine<K, V> {
     public  V get(K key) {
         V value=null;
         MyElement<K, V> element = elements.get(key);
-        if (element != null) {
-            value=element.getValue();
+        value = element != null ? element.getValue() : null;
+
+        if (value != null) {
             hit++;
             element.setAccessed();
         } else {

@@ -29,8 +29,9 @@ public class SoftRefCacheEngImpl<K, V> implements CacheEngine<K, V> {
     public V get(K key) {
         V value=null;
         SoftReference<V> reference = mCache.get(key);
-        if (reference != null ){
-            value=reference.get();
+        value = reference != null ? reference.get() : null;
+
+        if (value != null ){
             hit++;
         }
         else{

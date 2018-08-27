@@ -4,10 +4,10 @@ package ru.otus.hw06;
 public class CacheMain {
 
     public static void main(String[] args) throws InterruptedException {
-      // new CacheMain().eternalCacheExample();
-      //  new CacheMain().idleCacheExample();
-      // new CacheMain().lifeCacheExample();
-       new CacheMain().softRefCacheExample();
+     // new CacheMain().eternalCacheExample();
+     // new CacheMain().idleCacheExample();
+     // new CacheMain().lifeCacheExample();
+      new CacheMain().softRefCacheExample();
 
     }
     private void softRefCacheExample() {

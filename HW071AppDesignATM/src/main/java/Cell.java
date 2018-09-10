@@ -1,30 +1,31 @@
 public class Cell {
     private static final int DEFAULT_CAPACITY = 100;
-    private Currency currency;
-    private String typeOfBills ;
+    private String currency;
+    private int denomiation;
     private int capacity;
+    public static final int MAX_CAPCITY = 150;
 
 
-    public Cell(Currency currency, String bill) {
-        this.currency = currency;
-        this.typeOfBills = bill;
+    public Cell(Bill bill) {
+        this.currency = bill.getcurrancy();
+        this.denomiation = bill.getDenomination();
         this.capacity = DEFAULT_CAPACITY;
     }
 
-    public Currency getCurrency() {
+    public String getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public void setCurrency(String currency) {
         this.currency = currency;
     }
 
-    public String getTypeOfBills() {
-        return typeOfBills;
+    public int getDenomiation() {
+        return denomiation;
     }
 
-    public void setTypeOfBills(String typeOfBills) {
-        this.typeOfBills = typeOfBills;
+    public void setDenomiation(int denomiation) {
+        this.denomiation = denomiation;
     }
 
     public int getCapacity() {
@@ -33,6 +34,10 @@ public class Cell {
 
     public void addBill(int amount) {
         this.capacity += amount;
+    }
+
+    public void addBill() {
+        this.capacity ++;
     }
 
     public void takeOffBill(int amount){
@@ -45,7 +50,9 @@ public class Cell {
 
 
     public boolean isCapacious(int amount){
-        return capacity+amount<capacity ? true : false;
+        return capacity+amount<MAX_CAPCITY ? true : false;
     }
-
+    public boolean isCapacious(){
+        return isCapacious(1);
+    }
 }

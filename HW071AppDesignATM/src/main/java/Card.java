@@ -1,11 +1,11 @@
 public class Card {
     private final String holderName ;
-    private final long cardNumber;
+    private final String cardNumber;
     private final String  issuingBank;
-    private final Currency currency;
+    private final String currency;
     private double balance;
 
-    public Card(String holderName, long cardNumber, String issuingBank, Currency currency, double balance) {
+    public Card(String holderName, String cardNumber, String issuingBank, String currency, double balance) {
         this.holderName = holderName;
         this.cardNumber = cardNumber;
         this.issuingBank = issuingBank;
@@ -17,7 +17,7 @@ public class Card {
         return holderName;
     }
 
-    public long getCardNumber() {
+    public String getCardNumber() {
         return cardNumber;
     }
 
@@ -25,7 +25,7 @@ public class Card {
         return issuingBank;
     }
 
-    public Currency getCurrency() {
+    public String getCurrency() {
         return currency;
     }
 

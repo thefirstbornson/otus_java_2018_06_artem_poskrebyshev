@@ -20,7 +20,7 @@ public class ATMModelT101 implements ATM{
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             try {
-                System.out.print("Внесите деньги по одной купюре. Для завершения операции нажмите 'q'.");
+                System.out.print("Внесите деньги по одной купюре. Для завершения операции нажмите 'q': ");
                 String input = br.readLine();
 //                try{
 //                    int i = Integer.parseInt(br.readLine());
@@ -37,6 +37,10 @@ public class ATMModelT101 implements ATM{
                     int bill =Integer.parseInt(input);
                     if (basket.stream().map(x->x.getDenomiation()).filter(x->x.equals(bill)).findAny().isPresent()){
                         billToCell(new Bill(currentCur, bill));
+                        System.out.println("Вы внесли "+ bill + " " + this.currentCur);
+                    }
+                    else {
+                        System.out.println("Неверный формат ввода!");
                     };
                 }
 
@@ -45,7 +49,9 @@ public class ATMModelT101 implements ATM{
                 System.out.println("Неверный ввод суммы");
             }
         }
+        System.out.println("Конец!");
     }
+
 
 
     public double getBalance(Card card) {
@@ -63,8 +69,10 @@ public class ATMModelT101 implements ATM{
             if (bill.getDenomination( )== cell.getDenomiation() && (bill.getcurrancy()==this.currentCur)) {
                 if (cell.isCapacious()){
                     cell.addBill();
+                    break;
                 }
                 else{
+                    System.out.println("Невозможно внести купюру. Ячейка переполнена!");
                     break;
                 }
             }

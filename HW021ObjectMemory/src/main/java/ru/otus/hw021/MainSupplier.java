@@ -25,6 +25,7 @@ public class MainSupplier {
     }
 
 
+
     public static void calcSize(Supplier supplier) throws InterruptedException {
 
         int size = 20_000_000;

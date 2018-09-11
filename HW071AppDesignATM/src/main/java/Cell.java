@@ -1,9 +1,9 @@
-public class Cell {
+public class Cell implements Comparable<Cell>  {
     private static final int DEFAULT_CAPACITY = 100;
     private String currency;
     private int denomiation;
     private int capacity;
-    public static final int MAX_CAPCITY = 150;
+    public static final int MAX_CAPCITY = 102;
 
 
     public Cell(Bill bill) {
@@ -45,14 +45,21 @@ public class Cell {
     }
 
     public boolean hasBills(int amount){
-        return capacity-amount>0 ? true : false;
+        return capacity-amount>=0 ? true : false;
     }
 
 
     public boolean isCapacious(int amount){
-        return capacity+amount<MAX_CAPCITY ? true : false;
+        return capacity+amount<=MAX_CAPCITY ? true : false;
     }
     public boolean isCapacious(){
         return isCapacious(1);
     }
+
+    @Override
+    public int compareTo(Cell compareCell) {
+        int compareDenomination=((Cell)compareCell).getDenomiation();
+        return this.denomiation-compareDenomination;
+    }
 }
+

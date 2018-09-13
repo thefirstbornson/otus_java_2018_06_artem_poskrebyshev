@@ -1,14 +1,20 @@
 public class Cell implements Comparable<Cell>  {
-    private static final int DEFAULT_CAPACITY = 100;
+    private static final int DEFAULT_CAPACITY = 1;
     private String currency;
     private int denomiation;
     private int capacity;
-    public static final int MAX_CAPCITY = 102;
+    public static final int MAX_CAPCITY = 20;
 
 
-    public Cell(Bill bill) {
-        this.currency = bill.getcurrancy();
-        this.denomiation = bill.getDenomination();
+    public Cell(String currency,int denomiation,int capacity ) {
+        this.currency = currency;
+        this.denomiation = denomiation;
+        this.capacity =  capacity;
+    }
+
+    public Cell(String currency,int denomiation ) {
+        this.currency = currency;
+        this.denomiation = denomiation;
         this.capacity = DEFAULT_CAPACITY;
     }
 
@@ -37,7 +43,7 @@ public class Cell implements Comparable<Cell>  {
     }
 
     public void addBill() {
-        this.capacity ++;
+        addBill(1);
     }
 
     public void takeOffBill(int amount){
@@ -60,6 +66,13 @@ public class Cell implements Comparable<Cell>  {
     public int compareTo(Cell compareCell) {
         int compareDenomination=((Cell)compareCell).getDenomiation();
         return this.denomiation-compareDenomination;
+    }
+
+    public int diff(Cell cell) {
+        if (this.getCurrency()==cell.getCurrency() && this.getDenomiation()==cell.getDenomiation()) {
+            return this.getCapacity()-cell.getCapacity();
+        }
+        else return-1;
     }
 }
 

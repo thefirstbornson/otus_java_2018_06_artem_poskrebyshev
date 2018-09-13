@@ -18,7 +18,7 @@ public class ATMModelT101 implements ATM{
             while (true) {
                 try {
                     if (!availableNotes().isEmpty()) {
-                        System.out.print("Введите сумму необходимую для снятия. Для выхода из меню нажмите 'q': ");
+                        System.out.print("Введите сумму необходимую для снятия. Для выхода из меню введите 'q': ");
                         String input = br.readLine();
 
                             if ("q".equals(input)) {

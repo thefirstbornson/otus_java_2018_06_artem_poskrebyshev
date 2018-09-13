@@ -1,5 +1,5 @@
 public class Cell implements Comparable<Cell>  {
-    private static final int DEFAULT_CAPACITY = 1;
+    private static final int DEFAULT_CAPACITY = 10;
     private String currency;
     private int denomiation;
     private int capacity;

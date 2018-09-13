@@ -56,7 +56,7 @@ public class ATMModelT101 implements ATM{
         int acceptedCash =0;
         while (true) {
             try {
-                System.out.print("Внесите деньги по одной купюре. Для завершения операции нажмите 'q': ");
+                System.out.print("Внесите деньги по одной купюре. Для завершения операции введите 'q': ");
                 String input = br.readLine();
 
                 if ("q".equals(input)) {
@@ -84,7 +84,7 @@ public class ATMModelT101 implements ATM{
         }
     }
 
-    public List<Cell> vaildInput(int input) {
+    private List<Cell> vaildInput(int input) {
         String err ="Неверный формат введенных данных!";
         int validInt=input;
         List<Cell> moneyIssue=null;
@@ -124,11 +124,10 @@ public class ATMModelT101 implements ATM{
         System.out.println("На вашей карте " + card.getBalance() + " " + card.getCurrency());
     }
 
-    public ArrayList<Integer> availableNotes(){
+    private ArrayList<Integer> availableNotes(){
         return new ArrayList<>(this.basket.stream()
                 .filter(x -> x.getCapacity() > 0)
                 .map(x -> x.getDenomiation())
-                .sorted()
                 .collect(Collectors.toList()));
     };
 
@@ -138,7 +137,7 @@ public class ATMModelT101 implements ATM{
         Collections.reverse(this.basket);
         }
 
-    public void reduceBasket(List<Cell> moneyIssue ){
+    private void reduceBasket(List<Cell> moneyIssue ){
         for (int i = 0; i < this.basket.size(); i++) {
             Cell reduBasket = new Cell (this.basket.get(i).getCurrency()
                                           ,this.basket.get(i).getDenomiation()
@@ -162,7 +161,7 @@ public class ATMModelT101 implements ATM{
         }
     };
 
-    public List<Cell> factorize(int numbers, List<Cell> source) {
+    private List<Cell> factorize(int numbers, List<Cell> source) {
         List<Cell> factors = new ArrayList<>();
         for (Cell cell:source) {
             int minCapacity = Integer.min(numbers/cell.getDenomiation(),cell.getCapacity());
@@ -177,38 +176,4 @@ public class ATMModelT101 implements ATM{
         return factors;
     }
 
-    public static void main(String[] args)  {
-        Card card = new Card("AP","5469200011792412","SB","RUB",15001.25);
-        ATMModelT101 bankomat = new ATMModelT101();
-        bankomat.fillBasket(Arrays.asList(new Cell("RUB",100),new Cell("RUB",200)
-                                    ,new Cell("RUB",500),new Cell("RUB",1000)
-                                    ,new Cell("RUB",2000),new Cell("RUB",5000)));
-        bankomat.currentCur="RUB";
-
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        while (true){
-            System.out.println("-----------------------------------------");
-            System.out.println("В банкомате доступны слеюдущие операции:");
-            System.out.println("1. Снятие наличных");
-            System.out.println("2. Пополнение карты");
-            System.out.println("3. Показать баланс карты");
-            System.out.println("-----------------------------------------");
-            System.out.print("Выберете нужный пункт меню или нажмите 'q' для возврата карты: ");
-            try {
-                String menuOption = br.readLine();
-                switch (menuOption){
-                    case "1":  bankomat.dispenseCash(card);
-                               break;
-                    case "2":  bankomat.acceptCash(card);
-                              break;
-                    case "3":  bankomat.getBalance(card);
-                        break;
-                    case "q":  System.exit(0);
-                        break;
-                }
-            }
-            catch (IOException e) {
-            }
-        }
-    }
 }

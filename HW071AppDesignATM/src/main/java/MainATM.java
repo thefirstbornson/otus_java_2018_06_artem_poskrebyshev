@@ -7,13 +7,13 @@ import java.util.stream.Collectors;
 
 public class MainATM {
     public static void main(String[] args) {
-        Card card = new Card("AP","5469200011792412","SB","RUB",15001.25);
         ATMModelT101 bankomat = new ATMModelT101();
 
         bankomat.currentCur=Currency.Rubles.NAME;
         bankomat.fillBasket(Arrays.stream(Currency.Rubles.values())
                                   .map(p->new Cell(bankomat.currentCur,p.getValue()))
                                   .collect(Collectors.toList()));
+        Card card = new Card("AP","5469200011792412","SB","RUB",15001.25);
 
         new ConsoleView(card,bankomat).showMenu();
     }

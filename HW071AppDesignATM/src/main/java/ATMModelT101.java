@@ -12,7 +12,7 @@ public class ATMModelT101 implements ATM{
     ATMModelT101() {
         this.basket  = new ArrayList<>(DEFAULT_CELLS_COUNT);
     }
-
+    @Override
     public List<Cell> dispenseCash(Card card, String input) {
                 try {
                     if (!availableNotes().isEmpty()) {
@@ -36,7 +36,7 @@ public class ATMModelT101 implements ATM{
                 }
                 return null;
     }
-
+    @Override
     public int acceptCash(Card card, String input) {
             try {
                     int bill =Integer.parseInt(input);
@@ -55,6 +55,25 @@ public class ATMModelT101 implements ATM{
                 System.out.println("Неверный ввод суммы");
             }
         return 0;
+    }
+
+    @Override
+    public double getBalance(Card card) {
+        return card.getBalance();
+    }
+
+    @Override
+    public void fillBasket(List<Cell> bills) {
+        this.basket.addAll(bills);
+        Collections.sort(this.basket);
+        Collections.reverse(this.basket);
+    }
+
+    private List<Integer> availableNotes(){
+        return this.basket.stream()
+                          .filter(x -> x.getCapacity() > 0)
+                          .map(Cell::getDenomiation)
+                          .collect(Collectors.toList());
     }
 
     private List<Cell> vaildInput(int validInt) {
@@ -81,8 +100,8 @@ public class ATMModelT101 implements ATM{
 
             moneyIssue = this.factorize(validInt,this.basket);
             if (moneyIssue==null){
-                    err ="Невозможно выдать данную сумму";
-                    throw new Exception();
+                err ="Невозможно выдать данную сумму";
+                throw new Exception();
             }
         }
         catch (Exception e){
@@ -90,24 +109,6 @@ public class ATMModelT101 implements ATM{
         }
         return moneyIssue;
     }
-
-    @Override
-    public double getBalance(Card card) {
-        return card.getBalance();
-    }
-
-    private List<Integer> availableNotes(){
-        return this.basket.stream()
-                          .filter(x -> x.getCapacity() > 0)
-                          .map(Cell::getDenomiation)
-                          .collect(Collectors.toList());
-    }
-
-    public void fillBasket(List<Cell> bills) {
-        this.basket.addAll(bills);
-        Collections.sort(this.basket);
-        Collections.reverse(this.basket);
-        }
 
     private void reduceBasket(List<Cell> moneyIssue ){
         for (int i = 0; i < this.basket.size(); i++) {

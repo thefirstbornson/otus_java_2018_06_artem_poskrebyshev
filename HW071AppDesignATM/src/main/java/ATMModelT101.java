@@ -24,6 +24,7 @@ public class ATMModelT101 implements ATM{
                             if ("q".equals(input)) {
                             } else {
                                 int correctInt = Integer.parseInt(input);
+
                                 if  (card.isSufficientFunding(correctInt)) {
                                     List<Cell> moneyIssue = vaildInput(correctInt);
                                     if (moneyIssue != null) {
@@ -40,6 +41,7 @@ public class ATMModelT101 implements ATM{
                                 }else{
                                     System.out.println("На вашей карте недостаточно средств!");
                                 }
+
                             }
                     } else {
                         System.out.println("Банкомат работает только на прием наличных!");
@@ -51,37 +53,24 @@ public class ATMModelT101 implements ATM{
             }
     }
 
-    public void acceptCash(Card card) {
-        BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
-        int acceptedCash =0;
-        while (true) {
+    public int acceptCash(Card card, String input) {
             try {
-                System.out.print("Внесите деньги по одной купюре. Для завершения операции введите 'q': ");
-                String input = br.readLine();
-
-                if ("q".equals(input)) {
-                    break;
-                }
-                else{
                     int bill =Integer.parseInt(input);
                     if (basket.stream().map(x->x.getDenomiation()).filter(x->x.equals(bill)).findAny().isPresent()){
-                        billToCell(new Bill(currentCur, bill));
-                        acceptedCash+=bill;
-                        System.out.println("Вы внесли "+ bill + " " + this.currentCur);
+                        int validVolumeCash =billToCell(new Bill(currentCur, bill));
+                        if (validVolumeCash>0) {
+                            card.deposit(validVolumeCash);
+                        }
+                        return validVolumeCash;
                     }
                     else {
-                        System.out.println("Неверный формат ввода!");
+                        System.out.println("Вы не можете внести такую купюру!");
                     };
-                }
             }
             catch ( Exception e){
                 System.out.println("Неверный ввод суммы");
             }
-        }
-        if (acceptedCash > 0) {
-            card.deposit(acceptedCash);
-            System.out.println("Всего внесено на карту: " + acceptedCash + " "+currentCur);
-        }
+        return 0;
     }
 
     private List<Cell> vaildInput(int input) {
@@ -120,8 +109,8 @@ public class ATMModelT101 implements ATM{
     }
 
     @Override
-    public void getBalance(Card card) {
-        System.out.println("На вашей карте " + card.getBalance() + " " + card.getCurrency());
+    public double getBalance(Card card) {
+        return card.getBalance();
     }
 
     private ArrayList<Integer> availableNotes(){
@@ -139,19 +128,19 @@ public class ATMModelT101 implements ATM{
 
     private void reduceBasket(List<Cell> moneyIssue ){
         for (int i = 0; i < this.basket.size(); i++) {
-            Cell reduBasket = new Cell (this.basket.get(i).getCurrency()
-                                          ,this.basket.get(i).getDenomiation()
-                                          ,this.basket.get(i).diff(moneyIssue.get(i)));
-            this.basket.set(i,reduBasket);
+                Cell reduBasket = new Cell (this.basket.get(i).getCurrency()
+                                           ,this.basket.get(i).getDenomiation()
+                                           ,this.basket.get(i).diff(moneyIssue.get(i)));
+                this.basket.set(i,reduBasket);
         }
     }
 
-    private void billToCell(Bill bill){
-        for (Cell cell: basket){
+    private int billToCell(Bill bill){
+        for (Cell cell: this.basket){
             if (bill.getDenomination()== cell.getDenomiation() && (bill.getcurrancy()==this.currentCur)) {
                 if (cell.isCapacious()){
                     cell.addBill();
-                    break;
+                    return bill.getDenomination();
                 }
                 else{
                     System.out.println("Невозможно внести купюру. Ячейка переполнена!");
@@ -159,6 +148,7 @@ public class ATMModelT101 implements ATM{
                 }
             }
         }
+        return 0;
     };
 
     private List<Cell> factorize(int numbers, List<Cell> source) {

@@ -1,18 +1,17 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.List;
 
-public class ConsoleView {
-    Card card;
-    ATM bankomat;
-    public ConsoleView(Card card, ATM bankomat) {
+class ConsoleView {
+    private Card card;
+    private ATM bankomat;
+    ConsoleView(Card card, ATM bankomat) {
         this.card = card;
         this.bankomat =bankomat;
     }
 
-    public void showMenu() {
-
-
+    void showMenu() {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             System.out.println("-----------------------------------------");
@@ -24,12 +23,28 @@ public class ConsoleView {
             System.out.print("Выберете нужный пункт меню или введите 'q' для возврата карты: ");
             try {
                 String menuOption = br.readLine();
+                String message;
                 switch (menuOption) {
                     case "1":
-                        bankomat.dispenseCash(card);
+                        message ="Введите сумму необходимую для снятия. Для выхода из меню введите 'q': ";
+                        while (true){
+                            List<Cell> moneyIssue;
+                            String input =userInput(message);
+                            if (!"q".equals(input)) {
+                                moneyIssue = bankomat.dispenseCash(card,input);
+                            } else{
+                                break;
+                            }
+                            if (moneyIssue!=null){
+                                System.out.print("Выдано " + input + " " + card.getCurrency() + " следующими купюрами: ");
+                                moneyIssue.forEach(x->System.out.print(x.getCapacity() > 0 ? x.getDenomiation() + "-" + x.getCapacity() + " " : ""));
+                                System.out.println();
+                                break;
+                            }
+                        }
                         break;
                     case "2":
-                        String message = "Внесите деньги по одной купюре. Для завершения операции введите 'q': ";
+                        message = "Внесите деньги по одной купюре. Для завершения операции введите 'q': ";
                         int acceptedCash =0;
                         while (true){
                             String input =userInput(message);
@@ -49,11 +64,12 @@ public class ConsoleView {
                         break;
                 }
             } catch (IOException e) {
+                System.out.println("Неверный ввод");
             }
         }
     }
 
-    String userInput(String message) {
+    private String userInput(String message) {
         String input=null;
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(System.in));

@@ -32,14 +32,14 @@ public final class Currency {
         FIFTY_DOLLARS(50),
         ONE_HUNDRED_DOLLARS(100);
 
-        public static final String CURRENCY="USD";
+        public static final String NAME="USD";
         private final int value;
 
         Dollars(int value) {
             this.value = value;
         }
 
-        public float getValue() {
+        public int getValue() {
             return this.value;
         }
 

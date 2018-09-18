@@ -36,6 +36,7 @@ public class ATMModelT101 implements ATM{
                 }
                 return null;
     }
+
     @Override
     public int acceptCash(Card card, String input) {
             try {

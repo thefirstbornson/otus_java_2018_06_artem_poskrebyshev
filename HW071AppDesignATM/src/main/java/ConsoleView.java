@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.math.RoundingMode;
 import java.util.List;
 
 class ConsoleView {
@@ -11,7 +12,7 @@ class ConsoleView {
         this.bankomat =bankomat;
     }
 
-    void showMenu() {
+    void showMenu()  {
         BufferedReader br = new BufferedReader(new InputStreamReader(System.in));
         while (true) {
             System.out.println("-----------------------------------------");
@@ -35,12 +36,12 @@ class ConsoleView {
                             } else{
                                 break;
                             }
-                            if (moneyIssue!=null){
+                            if (moneyIssue!=null) {
                                 System.out.print("Выдано " + input + " " + card.getCurrency() + " следующими купюрами: ");
-                                moneyIssue.forEach(x->System.out.print(x.getCapacity() > 0 ? x.getDenomiation() + "-" + x.getCapacity() + " " : ""));
+                                moneyIssue.forEach(x -> System.out.print(x.getCapacity() > 0 ? x.getDenomiation() + "-" + x.getCapacity() + " " : ""));
                                 System.out.println();
-                                break;
                             }
+                            break;
                         }
                         break;
                     case "2":
@@ -57,14 +58,14 @@ class ConsoleView {
                         System.out.println("Вы внесли "+ acceptedCash + " " + card.getCurrency());
                         break;
                     case "3":
-                        System.out.println("На вашей карте " + bankomat.getBalance(card) + " " + card.getCurrency());
+                        System.out.println("На вашей карте " + String.format("%.2f",bankomat.getBalance(card)) + " " + card.getCurrency());
                         break;
                     case "q":
                         System.exit(0);
                         break;
                 }
             } catch (IOException e) {
-                System.out.println("Неверный ввод");
+                System.out.println(e.getMessage());
             }
         }
     }

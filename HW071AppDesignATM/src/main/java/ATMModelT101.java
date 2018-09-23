@@ -13,49 +13,42 @@ public class ATMModelT101 implements ATM{
         this.basket  = new ArrayList<>(DEFAULT_CELLS_COUNT);
     }
     @Override
-    public List<Cell> dispenseCash(Card card, String input) {
+    public List<Cell> dispenseCash (Card card, String input){
+            List<Cell> moneyIssue=null;
                 try {
-                    if (!availableNotes().isEmpty()) {
-                        int correctInt = Integer.parseInt(input);
-                        if  (card.isSufficientFunding(correctInt)) {
-                            List<Cell> moneyIssue = vaildInput(correctInt);
-                            if (moneyIssue != null) {
-                                reduceBasket(moneyIssue);
-                                card.withdraw(Double.parseDouble(input));
-                                return moneyIssue;
-                            }
-                            }else{
-                                System.out.println("На вашей карте недостаточно средств!");
-                            }
-
-                    } else {
-                        System.out.println("Банкомат работает только на прием наличных!");
-                                            }
-                } catch (Exception e) {
-                    System.out.println("Неверный формат введенных данных!");
+                    if (availableNotes().isEmpty()) throw new NotValidMoneyRequestException("Банкомат работает только на прием наличных!");
+                    int correctInt = Integer.parseInt(input);
+                    if  (!card.isSufficientFunding(correctInt)) throw new NotValidMoneyRequestException("На вашей карте недостаточно средств!!");
+                    moneyIssue = vaildInput(correctInt);
+                    reduceBasket(moneyIssue);
+                    card.withdraw(Double.parseDouble(input));
+                } catch (NotValidMoneyRequestException e) {
+                    System.out.println(e.getMessage());
                 }
-                return null;
+                catch (NumberFormatException e){
+                    System.out.println("Недопустимый формат ввода!");
+                }
+            return moneyIssue;
     }
 
     @Override
     public int acceptCash(Card card, String input) {
+        int validVolumeCash=0;
             try {
-                    int bill =Integer.parseInt(input);
-                    if (basket.stream().map(Cell::getDenomiation).anyMatch(x->x.equals(bill))){
-                        int validVolumeCash =billToCell(new Bill(currentCur, bill));
-                        if (validVolumeCash>0) {
-                            card.deposit(validVolumeCash);
-                        }
-                        return validVolumeCash;
-                    }
-                    else {
-                        System.out.println("Вы не можете внести такую купюру!");
-                    }
+                 int bill =Integer.parseInt(input);
+                 if (!basket.stream().map(Cell::getDenomiation).anyMatch(x->x.equals(bill)))
+                     throw new NotValidMoneyRequestException("Вы не можете внести такую купюру!");
+                 validVolumeCash =billToCell(new Bill(currentCur, bill));
+                 if (validVolumeCash>0) card.deposit(validVolumeCash);
+                 return validVolumeCash;
             }
-            catch ( Exception e){
-                System.out.println("Неверный ввод суммы");
+            catch (NotValidMoneyRequestException e) {
+                System.out.println(e.getMessage());
             }
-        return 0;
+            catch (NumberFormatException e){
+                System.out.println("Недопустимый формат ввода!");
+            }
+        return validVolumeCash;
     }
 
     @Override
@@ -77,37 +70,28 @@ public class ATMModelT101 implements ATM{
                           .collect(Collectors.toList());
     }
 
-    private List<Cell> vaildInput(int validInt) {
+    private List<Cell> vaildInput(int validInt) throws NotValidMoneyRequestException {
         String err ="Неверный формат введенных данных!";
         List<Cell> moneyIssue=null;
-        try {
+
+            if (validInt<0)
+                throw new NotValidMoneyRequestException("Запрошенная сумма не может быть отрицательной");
 
             int sumInBasket =this.basket.stream().filter(x -> x.getCapacity() > 0)
-                    .mapToInt(x -> x.getDenomiation()*x.getCapacity())
-                    .sum();
-
-            if (validInt>sumInBasket&&validInt<0) {
-                err = "Невозможно выдать данную сумму!";
-                throw new Exception();
-            }
+                                                 .mapToInt(x -> x.getDenomiation()*x.getCapacity())
+                                                 .sum();
+            if (validInt>sumInBasket)
+                throw new NotValidMoneyRequestException("Запрошенная сумма превышает допустимый лимит для выдачи");
 
             int minDenomination = this.basket.stream().map(Cell::getDenomiation)
-                    .filter(x -> x > 0)
-                    .min(Integer::min).get();
-            if (!(validInt >= minDenomination && validInt % minDenomination == 0)) {
-                err = "Введенная сумма должна быть кратна " + minDenomination;
-                throw new Exception();
-            }
+                                                      .filter(x -> x > 0)
+                                                      .min(Integer::min).get();
+            if (!(validInt >= minDenomination && validInt % minDenomination == 0))
+                throw new NotValidMoneyRequestException( "Введенная сумма должна быть кратна " + minDenomination);
 
             moneyIssue = this.factorize(validInt,this.basket);
-            if (moneyIssue==null){
-                err ="Невозможно выдать данную сумму";
-                throw new Exception();
-            }
-        }
-        catch (Exception e){
-            System.out.println(err);
-        }
+            if (moneyIssue==null)throw new NotValidMoneyRequestException("Невозможно выдать данную сумму");
+
         return moneyIssue;
     }
 
@@ -150,5 +134,13 @@ public class ATMModelT101 implements ATM{
         }
         return factors;
     }
-
 }
+
+class NotValidMoneyRequestException extends Exception {
+
+    public NotValidMoneyRequestException(String message) {
+        super(message);
+    }
+}
+
+

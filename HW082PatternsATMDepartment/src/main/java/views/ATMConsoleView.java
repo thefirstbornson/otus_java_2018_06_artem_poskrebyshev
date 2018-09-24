@@ -33,10 +33,14 @@ public class ATMConsoleView {
                     case "1":
                         message ="Введите сумму необходимую для снятия. Для выхода из меню введите 'q': ";
                         while (true){
-                            List<Cell> moneyIssue;
+                            List<Cell> moneyIssue=null;
                             String input =userInput(message);
                             if (!"q".equals(input)) {
-                                moneyIssue = bankomat.dispenseCash(card,input);
+                                try {
+                                    moneyIssue = bankomat.dispenseCash(card, Integer.parseInt(input));
+                                }catch(NumberFormatException e){
+                                    System.out.println("Неверный ввод");
+                                }
                             } else{
                                 break;
                             }
@@ -54,7 +58,11 @@ public class ATMConsoleView {
                         while (true){
                             String input =userInput(message);
                             if (!"q".equals(input)) {
-                                acceptedCash+=bankomat.acceptCash(card,input);
+                                try {
+                                    acceptedCash += bankomat.acceptCash(card, Integer.parseInt(input));
+                                }catch (NumberFormatException e){
+                                    System.out.println("Неверный ввод");
+                                }
                             } else{
                                 break;
                             }

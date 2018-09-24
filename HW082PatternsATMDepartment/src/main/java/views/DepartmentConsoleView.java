@@ -32,19 +32,19 @@ public class DepartmentConsoleView {
                         break;
                     case "2":
                         card=new Card("AP"
-                                ,"5469200011792412"
+                                ,"5"
                                 ,"SB"
                                 ,"RUB"
-                                ,150001.25);
-                        String sumToDispense ="10000";
+                                ,10000);
+                        int sumToDispense =2000;
                         department.getATMList().forEach(x->x.dispenseCash(card,sumToDispense));
                         System.out.println("Со всех банкоматов снято: "
-                                + department.getATMList().size()*Integer.parseInt(sumToDispense)
+                                + department.getATMList().size()*sumToDispense
                                 +" " + card.getCurrency() +" ."
                         );
                         break;
                     case "3":
-                        if (department.restoreOriginalState()){
+                        if (department.restoreOriginalStates()){
                             System.out.println("Исходное состоятние восстановлено!");
                         }else {
                             System.out.println("Исходное состоятние не восстановлено!");
@@ -54,7 +54,7 @@ public class DepartmentConsoleView {
                         System.exit(0);
                         break;
                 }
-            } catch (IOException e) {
+            } catch (IOException|NumberFormatException e) {
                 System.out.println("Неверный ввод");
             }
         }

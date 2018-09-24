@@ -1,17 +1,26 @@
 package atm_components;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ATMModelT101 extends ATM{
-    private final int DEFAULT_CELLS_COUNT=10;
+public class ATMModelT101 implements ATM{
     private List<Cell>  basket ;
-    public String currentCur;
+    private String currentCur;
 
     public ATMModelT101() {
+        int DEFAULT_CELLS_COUNT = 10;
         this.basket  = new ArrayList<>(DEFAULT_CELLS_COUNT);
+    }
+
+    public String getCurrentCur() {
+        return currentCur;
+    }
+
+    public void setCurrentCur(String currentCur) {
+        this.currentCur = currentCur;
     }
 
     @Override
@@ -19,54 +28,36 @@ public class ATMModelT101 extends ATM{
         return this.basket.stream().mapToInt(x->x.getDenomiation()*x.getCapacity()).sum();
     }
 
-    public List<Cell> getBasket(){
-        return this.basket;
+    @Override
+    public List<Cell> dispenseCash (Card card, int input){
+        List<Cell> moneyIssue=null;
+        try {
+            if (availableNotes().isEmpty()) throw new NotValidMoneyRequestException("Банкомат работает только на прием наличных!");
+            if (!card.isSufficientFunding(input)) throw new NotValidMoneyRequestException("На вашей карте недостаточно средств!!");
+            moneyIssue = vaildInput(input);
+            reduceBasket(moneyIssue);
+            card.withdraw(input);
+        } catch (NotValidMoneyRequestException e) {
+            System.out.println(e.getMessage());
+        }
+        return moneyIssue;
     }
 
     @Override
-    public List<Cell> dispenseCash(Card card, String input) {
-                try {
-                    if (!availableNotes().isEmpty()) {
-                        int correctInt = Integer.parseInt(input);
-                        if  (card.isSufficientFunding(correctInt)) {
-                            List<Cell> moneyIssue = vaildInput(correctInt);
-                            if (moneyIssue != null) {
-                                reduceBasket(moneyIssue);
-                                card.withdraw(Double.parseDouble(input));
-                                return moneyIssue;
-                            }
-                            }else{
-                                System.out.println("На вашей карте недостаточно средств!");
-                            }
-
-                    } else {
-                        System.out.println("Банкомат работает только на прием наличных!");
-                                            }
-                } catch (Exception e) {
-                    System.out.println("Неверный формат введенных данных!");
-                }
-                return null;
-    }
-
-    @Override
-    public int acceptCash(Card card, String input) {
-            try {
-                    int bill =Integer.parseInt(input);
-                    if (basket.stream().map(Cell::getDenomiation).anyMatch(x->x.equals(bill))){
-                        int validVolumeCash =billToCell(new Bill(currentCur, bill));
-                        if (validVolumeCash>0) {
-                            card.deposit(validVolumeCash);
-                        }
-                        return validVolumeCash;
-                    }
-                    else {
-                        System.out.println("Вы не можете внести такую купюру!");
-                    }
-            }
-            catch ( Exception e){
-                System.out.println("Неверный ввод суммы");
-            }
-        return 0;
+    public int acceptCash(Card card, int input) {
+        int validVolumeCash=0;
+        try {
+            int bill =input;
+            if (!basket.stream().map(Cell::getDenomiation).anyMatch(x->x.equals(bill)))
+                throw new NotValidMoneyRequestException("Вы не можете внести такую купюру!");
+            validVolumeCash =billToCell(new Bill(currentCur, bill));
+            if (validVolumeCash>0) card.deposit(validVolumeCash);
+            return validVolumeCash;
+        }
+        catch (NotValidMoneyRequestException e) {
+            System.out.println(e.getMessage());
+        }
+        return validVolumeCash;
     }
 
     @Override
@@ -84,51 +75,41 @@ public class ATMModelT101 extends ATM{
 
     private List<Integer> availableNotes(){
         return this.basket.stream()
-                          .filter(x -> x.getCapacity() > 0)
-                          .map(Cell::getDenomiation)
-                          .collect(Collectors.toList());
+                .filter(x -> x.getCapacity() > 0)
+                .map(Cell::getDenomiation)
+                .collect(Collectors.toList());
     }
 
-    private List<Cell> vaildInput(int validInt) {
+    private List<Cell> vaildInput(int validInt) throws NotValidMoneyRequestException {
         String err ="Неверный формат введенных данных!";
         List<Cell> moneyIssue=null;
-        try {
 
-            int sumInBasket =this.basket.stream().filter(x -> x.getCapacity() > 0)
-                    .mapToInt(x -> x.getDenomiation()*x.getCapacity())
-                    .sum();
+        if (validInt<0)
+            throw new NotValidMoneyRequestException("Запрошенная сумма не может быть отрицательной");
 
-            if (validInt>sumInBasket&&validInt<0) {
-                err = "Невозможно выдать данную сумму!";
-                throw new Exception();
-            }
+        int sumInBasket =this.basket.stream().mapToInt(x -> x.getDenomiation()*x.getCapacity())
+                .sum();
+        if (validInt>sumInBasket)
+            throw new NotValidMoneyRequestException("Запрошенная сумма превышает допустимый лимит для выдачи");
 
-            int minDenomination = this.basket.stream().map(Cell::getDenomiation)
-                    .filter(x -> x > 0)
-                    .min(Integer::min).get();
-            if (!(validInt >= minDenomination && validInt % minDenomination == 0)) {
-                err = "Введенная сумма должна быть кратна " + minDenomination;
-                throw new Exception();
-            }
+        int minDenomination = this.basket.stream().map(Cell::getDenomiation)
+                .filter(x -> x > 0)
+                .min(Integer::min).get();
+        if (!(validInt >= minDenomination && validInt % minDenomination == 0))
+            throw new NotValidMoneyRequestException( "Введенная сумма должна быть кратна " + minDenomination);
 
-            moneyIssue = this.factorize(validInt,this.basket);
-            if (moneyIssue==null){
-                err ="Невозможно выдать данную сумму";
-                throw new Exception();
-            }
-        }
-        catch (Exception e){
-            System.out.println(err);
-        }
+        moneyIssue = this.factorize(validInt,this.basket);
+        if (moneyIssue==null)throw new NotValidMoneyRequestException("Невозможно выдать данную сумму");
+
         return moneyIssue;
     }
 
-    void reduceBasket(List<Cell> moneyIssue ){
+    private void reduceBasket(List<Cell> moneyIssue ){
         for (int i = 0; i < this.basket.size(); i++) {
-                Cell reduBasket = new Cell (this.basket.get(i).getCurrency()
-                                           ,this.basket.get(i).getDenomiation()
-                                           ,this.basket.get(i).diff(moneyIssue.get(i)));
-                this.basket.set(i,reduBasket);
+            Cell reduBasket = new Cell (this.basket.get(i).getCurrency()
+                    ,this.basket.get(i).getDenomiation()
+                    ,this.basket.get(i).diff(moneyIssue.get(i)));
+            this.basket.set(i,reduBasket);
         }
     }
 
@@ -153,15 +134,32 @@ public class ATMModelT101 extends ATM{
         for (Cell cell:source) {
             int minCapacity = Integer.min(numbers/cell.getDenomiation(),cell.getCapacity());
             factors.add(new Cell(cell.getCurrency()
-                                ,cell.getDenomiation()
-                                ,minCapacity));
+                    ,cell.getDenomiation()
+                    ,minCapacity));
             numbers -= cell.getDenomiation()*minCapacity;
         }
         if (numbers>0){
-           return null;
+            return null;
         }
         return factors;
     }
 
+    @Override
+    public ATMMemento save() {
+        return new ATMMemento(this.basket);
+    }
 
+    @Override
+    public void restore(ATMMemento m) {
+        fillBasket(m.getBasketState());
+    }
 }
+
+class NotValidMoneyRequestException extends Exception {
+
+    public NotValidMoneyRequestException(String message) {
+        super(message);
+    }
+}
+
+

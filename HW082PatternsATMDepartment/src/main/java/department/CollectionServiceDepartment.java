@@ -3,38 +3,44 @@ package department;
 import atm_components.ATM;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class CollectionServiceDepartment implements Department{
-    private List<ATMRestoreStructure> observers = new ArrayList<>();
+    private List<ATM> observers = new ArrayList<>();
     private int state;
 
-    public void add(ATM atm, ATMOriginator atmOriginator, ATMCaretaker atmCaretaker) {
-        observers.add(new ATMRestoreStructure(atm, atmOriginator,atmCaretaker));
+    public void add(ATM atm) {
+        observers.add(atm);
+    }
+
+    private HashMap<ATM, ATM.ATMMemento> originalStates =new HashMap<>();
+
+    @Override
+    public void save(ATM atm) {
+        originalStates.put(atm, atm.save());
     }
 
     public List<ATM> getATMList(){
-        return observers.stream().map(ATMRestoreStructure::getAtm).collect(Collectors.toList());
+        return observers;
     }
 
     @Override
     public int collectBalance() {
-        return getATMList().stream().mapToInt(ATM::getTotalAmount).sum();
+        return observers.stream().mapToInt(ATM::getTotalAmount).sum();
+    }
+
+
+    public void restoreOriginalState(ATM atm) {
+            atm.restore(originalStates.get(atm));
     }
 
     @Override
-    public boolean restoreOriginalState() {
-        try {
-            for (ATMRestoreStructure observer : observers) {
-                observer.getAtm().fillBasket(observer.getAtmOriginator()
-                        .restore(observer.getAtmCaretaker()
-                                .getOriginalState()));
-            }
-            return true;
-        } catch (Exception e){
+    public boolean restoreOriginalStates() {
+        for (ATM atm:observers) {
+            restoreOriginalState(atm);
         }
-
-        return false;
+        return true;
     }
 }

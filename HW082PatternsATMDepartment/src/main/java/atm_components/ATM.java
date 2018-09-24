@@ -3,13 +3,27 @@ package atm_components;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ATM {
-    private final int DEFAULT_CELLS_COUNT=100;
-    private ArrayList<Cell> basket ;
-    public String currentCur;
-    abstract public List<Cell> dispenseCash(Card card, String input);
-    abstract public int acceptCash(Card card, String input);
-    abstract public double getBalance(Card card);
-    abstract public void fillBasket(List<Cell> bills);
-    abstract public int getTotalAmount();
+public interface ATM {
+   List<Cell> dispenseCash(Card card, int input);
+   int acceptCash(Card card, int input);
+   double getBalance(Card card);
+   void fillBasket(List<Cell> bills);
+   int getTotalAmount();
+   ATMMemento save() ;
+   void restore(ATMMemento m);
+
+   class ATMMemento {
+        private final List<Cell> basketState;
+
+        ATMMemento(List<Cell> state) {
+            this.basketState = new ArrayList<>(state) ;
+        }
+
+        List<Cell> getBasketState() {
+            return basketState;
+        }
+   }
+
+
+
 }

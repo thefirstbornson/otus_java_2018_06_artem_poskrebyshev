@@ -41,7 +41,7 @@ public class Card {
         this.balance -= amount;
     }
     public boolean isSufficientFunding(double amount){
-        return this.balance<amount  ? false : true;
+        return this.balance>amount ;
     }
 
 }

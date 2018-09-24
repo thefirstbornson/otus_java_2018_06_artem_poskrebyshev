@@ -77,8 +77,7 @@ public class ATMModelT101 implements ATM{
             if (validInt<0)
                 throw new NotValidMoneyRequestException("Запрошенная сумма не может быть отрицательной");
 
-            int sumInBasket =this.basket.stream().filter(x -> x.getCapacity() > 0)
-                                                 .mapToInt(x -> x.getDenomiation()*x.getCapacity())
+            int sumInBasket =this.basket.stream().mapToInt(x -> x.getDenomiation()*x.getCapacity())
                                                  .sum();
             if (validInt>sumInBasket)
                 throw new NotValidMoneyRequestException("Запрошенная сумма превышает допустимый лимит для выдачи");

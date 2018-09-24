@@ -23,7 +23,4 @@ public interface ATM {
             return basketState;
         }
    }
-
-
-
 }

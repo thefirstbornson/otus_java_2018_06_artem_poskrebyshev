@@ -3,15 +3,11 @@ package visitors;
 import elements.Element;
 import elements.PrimitiveOrWrapper;
 import javax.json.*;
-import org.apache.commons.lang3.ClassUtils;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
-import static org.apache.commons.lang3.ClassUtils.convertClassesToClassNames;
 import static org.apache.commons.lang3.ClassUtils.isPrimitiveOrWrapper;
 
 public class JSONExportVisitor implements JSONVisitor {
@@ -50,44 +46,23 @@ public class JSONExportVisitor implements JSONVisitor {
                 }
 
     public static void main(String[] args) {
-        Object a = new A();
-        JSONExportVisitor b = new JSONExportVisitor();
-
-        try {
-            List<Element> c = b.createElementsList(a);
+//      //  Object a = new A();
+//        JSONExportVisitor b = new JSONExportVisitor();
 //
-//            for (PrimitiveOrWrapper el:c) {
-//                System.out.println(el.getName() +" "+ el.getValue());
-//            }
-            b.export(c);
-        }
-        catch (Exception e){
-System.out.println(" error");
-        }
+////        try {
+////            List<Element> c = b.createElementsList(a);
+//////
+//////            for (PrimitiveOrWrapper el:c) {
+//////                System.out.println(el.getName() +" "+ el.getValue());
+//////            }
+////            b.export(c);
+////        }
+//        catch (Exception e){
+//System.out.println(" error");
+//        }
     }
 }
 
-class A {
-    byte b;
-    short s;
-    int	i;
-    long l;
-    float f;
-    double d;
-    char c;
-    boolean	boo;
-
-    public A() {
-        this.b =1;
-        this.s = 2;
-        this.i = 3;
-        this.l = 4;
-        this.f = 5;
-        this.d = 6;
-        this.c = 7588;
-        this.boo = true;
-    }
-}
 //
 //Json.createObjectBuilder()
 //        .add("firstName", "Duke")

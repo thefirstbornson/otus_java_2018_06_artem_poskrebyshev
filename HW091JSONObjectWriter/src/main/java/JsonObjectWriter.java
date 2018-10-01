@@ -52,7 +52,7 @@ public class JsonObjectWriter {
         for (int i = 0; i < length; i++) {
             if (Array.get(object, i) != null) {
                 if        (isPrimitiveOrWrapper(Array.get(object, i).getClass())) {
-                          jsonArrayBuilder(jsonArraytBuilder, Array.get(object, i));
+                          jsonPrimArrayBuilder(jsonArraytBuilder, Array.get(object, i));
                 } else if (Array.get(object, i).getClass() == String.class) {
                           jsonArraytBuilder.add(Array.get(object, i).toString());
                 } else if (Array.get(object, i).getClass().isArray()) {
@@ -67,7 +67,7 @@ public class JsonObjectWriter {
         return jsonArraytBuilder;
     }
 
-    private void jsonArrayBuilder(JsonArrayBuilder jArrBld,Object object){
+    private void jsonPrimArrayBuilder(JsonArrayBuilder jArrBld,Object object){
         Class<?> clazz = wrapperToPrimitive(object.getClass());
         if       (clazz == int.class )   { jArrBld.add( (int) object);
         }else if (clazz == byte.class)   { jArrBld.add( (int)(byte) object);

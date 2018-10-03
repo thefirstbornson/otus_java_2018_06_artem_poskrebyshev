@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -52,12 +53,18 @@ public class PrintVisitor implements Visitor {
     }
 
     public void visitArray (Object array){
-     List list = Arrays.asList(array);
-        Iterator iterator = list.iterator();
-        while (iterator.hasNext()) {
-            Object o = iterator.next();
-            visit(o);
+        int length = Array.getLength(array);
+        for (int i = 0; i < length; i++) {
+            visit(Array.get(array, i));
         }
+        //Iterator iterator = list.iterator();
+        //while (iterator.hasNext())
+//        for (Object i:array) {
+//
+//        }{
+//            Object o = iterator.next();
+//            visit(o);
+//        }
     }
 
     public void visitList(List list) {
@@ -82,8 +89,14 @@ public class PrintVisitor implements Visitor {
     @Override
     public void visit(Object object) {
         try {
-            Method method = getMethod(object.getClass());
-            method.invoke(this, new Object[] {object});
+
+            if (object.getClass().isArray()) {
+                visitArray( object);
+            } else {
+                Method method = getMethod(object.getClass());
+                method.invoke(this, new Object[] {object});
+            }
+
         } catch (NullPointerException e) {
             System.out.println("null");
         }catch (Exception e) {
@@ -97,17 +110,7 @@ public class PrintVisitor implements Visitor {
         Method m = null;
         while (m == null && newc != Object.class) {
             String method = newc.getName();
-            if (method.lastIndexOf("[[")<0) {
-                method = "visit" + method.substring(method.lastIndexOf('.') + 1);
-            } else {
-                method = "visitArray";
-                try {
-                    m = getClass().getMethod(method, new Class[] {Object.class});
-                } catch (NoSuchMethodException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
+            method = "visit" + method.substring(method.lastIndexOf('.') + 1);
             try {
                 m = getClass().getMethod(method, new Class[] {newc});
             } catch (NoSuchMethodException e) {

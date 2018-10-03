@@ -13,12 +13,11 @@ class TestClassB {
     char c;
     boolean	boo;
     TestClassA testClassA;
-    int a[]={1,3,5};;
-    String stroka ="stroka1";
-    String massiv[] ={"stroka1","str","adsf"};
-
+    int[] a;;
+    String stroka ="stroka2";
+   String massiv[] ={"stroka1","str","adsf"};
     public TestClassB() {
-
+         a = new int[]{1, 3, 5};
         this.b =1;
         this.s = 2;
         this.i = 3;
@@ -28,7 +27,7 @@ class TestClassB {
         this.c = 7588;
         this.boo = true;
         this.testClassA = new TestClassA();
-        numbers= new ArrayList<>(Arrays.asList(this.testClassA, this.testClassA));
+       numbers= new ArrayList<>(Arrays.asList(this.testClassA, this.testClassA));
 //        set  = new HashSet<>();
 //        set.add(1);
 //        set.add(2);

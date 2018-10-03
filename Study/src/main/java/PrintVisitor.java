@@ -10,6 +10,9 @@ public class PrintVisitor implements Visitor {
         TestClassB b = new TestClassB();
         PrintVisitor pv =new PrintVisitor();
         pv.visit(b);
+//        String s = "[[Ljava.lang.Integer";
+//        System.out.println(s.lastIndexOf("[["));
+//        System.out.println(s.substring(s.lastIndexOf("[4[")));
     }
 
     public void visitFloat(Float _float) {
@@ -46,6 +49,15 @@ public class PrintVisitor implements Visitor {
 
     public void visitString(String string) {
         System.out.println("'"+string+"'");
+    }
+
+    public void visitArray (Object array){
+     List list = Arrays.asList(array);
+        Iterator iterator = list.iterator();
+        while (iterator.hasNext()) {
+            Object o = iterator.next();
+            visit(o);
+        }
     }
 
     public void visitList(List list) {
@@ -85,7 +97,17 @@ public class PrintVisitor implements Visitor {
         Method m = null;
         while (m == null && newc != Object.class) {
             String method = newc.getName();
-            method = "visit" + method.substring(method.lastIndexOf('.') + 1);
+            if (method.lastIndexOf("[[")<0) {
+                method = "visit" + method.substring(method.lastIndexOf('.') + 1);
+            } else {
+                method = "visitArray";
+                try {
+                    m = getClass().getMethod(method, new Class[] {Object.class});
+                } catch (NoSuchMethodException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
             try {
                 m = getClass().getMethod(method, new Class[] {newc});
             } catch (NoSuchMethodException e) {

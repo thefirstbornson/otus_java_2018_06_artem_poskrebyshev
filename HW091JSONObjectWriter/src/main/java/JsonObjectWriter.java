@@ -33,7 +33,7 @@ public class JsonObjectWriter {
                     } else if (field.get(object) instanceof Collection) {
                               Collection sourceList = (Collection) field.get(object);
                               jsonObjectBuilder.add(field.getName(),
-                              exportArray(sourceList.toArray(new Object[sourceList.size()])));
+                                      exportArray(sourceList.toArray(new Object[sourceList.size()])));
                     } else {
                               jsonObjectBuilder.add(field.getName(), export(field.get(object)));
                     }
@@ -69,20 +69,20 @@ public class JsonObjectWriter {
 
     private void jsonPrimArrayBuilder(JsonArrayBuilder jArrBld,Object object){
         Class<?> clazz = wrapperToPrimitive(object.getClass());
-        if       (clazz == int.class )   { jArrBld.add( (int) object);
-        }else if (clazz == byte.class)   { jArrBld.add( (int)(byte) object);
-        }else if (clazz == short.class)  { jArrBld.add( (int)(short) object);
-        }else if (clazz == char.class)   { jArrBld.add( (char) object);
-        }else if (clazz == long.class)   { jArrBld.add( (long) object);
-        }else if (clazz == float.class)  { jArrBld.add( new BigDecimal(Double.toString((double)(float) object)).setScale(6, RoundingMode.HALF_UP).stripTrailingZeros());
-        }else if (clazz == double.class) { jArrBld.add( (double) object);
-        }else if (clazz == boolean.class){ jArrBld.add( (boolean) object);
+        if       (clazz == int.class )    { jArrBld.add( (int) object);
+        }else if (clazz == byte.class)    { jArrBld.add( (byte) object);
+        }else if (clazz == short.class)   { jArrBld.add( (int)(short) object);
+        }else if (clazz == char.class)    { jArrBld.add( (char) object);
+        }else if (clazz == long.class)    { jArrBld.add( (long) object);
+        }else if (clazz == float.class)   { jArrBld.add( new BigDecimal(Double.toString((double)(float) object)).setScale(6, RoundingMode.HALF_UP).stripTrailingZeros());
+        }else if (clazz == double.class)  { jArrBld.add( (double) object);
+        }else if (clazz == boolean.class) { jArrBld.add( (boolean) object);
         }
     }
     private void jsonPrimObjBuilder(JsonObjectBuilder jObjBld,Object object, String fieldName){
         Class<?> clazz = wrapperToPrimitive(object.getClass());
         if       (clazz == int.class )    { jObjBld.add(fieldName, (int) object);
-        }else if (clazz == byte.class)    { jObjBld.add(fieldName, (int)(byte) object);
+        }else if (clazz == byte.class)    { jObjBld.add(fieldName, (byte) object);
         }else if (clazz == short.class)   { jObjBld.add(fieldName, (int)(short) object);
         }else if (clazz == char.class)    { jObjBld.add(fieldName, String.valueOf((char) object));
         }else if (clazz == long.class)    { jObjBld.add(fieldName, (long) object);

@@ -7,13 +7,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ObjectVisitor implements Visitor {
-    public static void main(String[] args) {
-//        List list = new ArrayList(Arrays.asList(1f,3f,5f,66f,6f,6f));
-//        TestClassA a = new TestClassA();
-//        TestClassB b = new TestClassB();
-//        ObjectVisitor pv =new ObjectVisitor();
-//        pv.visit(76.01356f);
-    }
 
     public void visitFloat(Float _float) {
             System.out.println(_float.toString()+"f");

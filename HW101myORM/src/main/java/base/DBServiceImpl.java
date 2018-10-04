@@ -2,18 +2,14 @@ package base;
 
 import connection.*;
 import executor.QueryExecutor;
-
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class DBServiceImpl implements DBService {
-    private static final String CREATE_TABLE_USER = "create table if not exists user (id bigint(20) auto_increment, name varchar(255), age int(3), primary key (id))";
+    private static final String CREATE_TABLE_USER = "create table if not exists user (id bigint(20) auto_increment" +
+                                                                ", name varchar(255), age int(3), primary key (id))";
     private static final String ADD_USER = "insert into user (name,age) values ('%s','%s')";
     private static final String GET_USER = "select * from user where id='%d'";
     private final Connection connection;

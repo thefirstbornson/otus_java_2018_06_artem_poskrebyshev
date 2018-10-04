@@ -1,18 +1,19 @@
 package executor;
 
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class Executor  {
+public class QueryExecutor {
     private final Connection connection;
 
-    public Executor(Connection connection) {
+    public QueryExecutor(Connection connection) {
         this.connection = connection;
     }
 
-    public <T> T execQuery(String query, ResultHandler<T> handler) throws SQLException {
+    public <T> T execQuery(String query, ResultHandler<T> handler) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         try(Statement stmt = connection.createStatement()) {
             stmt.execute(query);
             ResultSet result = stmt.getResultSet();

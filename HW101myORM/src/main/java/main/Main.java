@@ -2,6 +2,7 @@ package main;
 
 import base.DBService;
 import base.DBServiceImpl;
+import base.UserDataSet;
 
 public class Main {
     public static void main(String[] args) throws Exception {
@@ -9,7 +10,10 @@ public class Main {
     }
 
     private void run() throws Exception {
-        DBService dbService = new DBServiceImpl();
-        System.out.println(dbService.getMetaData());
+
+        DBService dbservice = new DBServiceImpl();
+        dbservice.save(new UserDataSet("John", 21));
+        System.out.println(dbservice.load(1, UserDataSet.class).toString());
+
     }
 }

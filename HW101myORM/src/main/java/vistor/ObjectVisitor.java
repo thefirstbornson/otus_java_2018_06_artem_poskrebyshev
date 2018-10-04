@@ -1,15 +1,18 @@
+package vistor;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.Iterator;
+import java.util.List;
 
-public class PrintVisitor implements Visitor {
+public class ObjectVisitor implements Visitor {
     public static void main(String[] args) {
-        List list = new ArrayList(Arrays.asList(1f,3f,5f,66f,6f,6f));
-        TestClassA a = new TestClassA();
-        TestClassB b = new TestClassB();
-        PrintVisitor pv =new PrintVisitor();
-        pv.visit(76.01356f);
+//        List list = new ArrayList(Arrays.asList(1f,3f,5f,66f,6f,6f));
+//        TestClassA a = new TestClassA();
+//        TestClassB b = new TestClassB();
+//        ObjectVisitor pv =new ObjectVisitor();
+//        pv.visit(76.01356f);
     }
 
     public void visitFloat(Float _float) {

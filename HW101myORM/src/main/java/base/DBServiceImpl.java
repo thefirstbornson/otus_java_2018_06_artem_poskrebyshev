@@ -1,62 +1,79 @@
 package base;
 
 import connection.*;
+import executor.QueryExecutor;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DBServiceImpl implements DBService {
-
+    private static final String CREATE_TABLE_USER = "create table if not exists user (id bigint(20) auto_increment, name varchar(255), age int(3), primary key (id))";
+    private static final String ADD_USER = "insert into user (name,age) values ('%s','%s')";
+    private static final String GET_USER = "select * from user where id='%d'";
     private final Connection connection;
 
     public DBServiceImpl() {
         connection = ConnectionHelper.getConnection();
     }
 
+
     @Override
-    public String getMetaData() {
+    public <T extends DataSet> void save(T user) {
+        QueryExecutor exec = new QueryExecutor(getConnection());
+        int rows = 0;
         try {
-            return "Connected to: " + getConnection().getMetaData().getURL() + "\n" +
-                    "DB name: " + getConnection().getMetaData().getDatabaseProductName() + "\n" +
-                    "DB version: " + getConnection().getMetaData().getDatabaseProductVersion() + "\n" +
-                    "Driver: " + getConnection().getMetaData().getDriverName();
+            rows = exec.execUpdate(String.format(ADD_USER
+                                                ,getValueFromField(user,"name")
+                                                ,getValueFromField(user,"age")));
         } catch (SQLException e) {
             e.printStackTrace();
-            return e.getMessage();
         }
+        System.out.println("User added. Rows changed: " + rows);
     }
+
+    private <T> T getValueFromField (Object object, String field){
+        T value=null;
+        try {
+            Field f =object.getClass().getDeclaredField(field);
+            f.setAccessible(true);
+            value= (T) f.get(object);
+        } catch (IllegalAccessException|NoSuchFieldException e) {
+            e.printStackTrace();
+        }
+        return value;
+    };
 
     @Override
-    public void prepareTables() throws SQLException {
+    public <T extends DataSet> T load(long id, Class<T> clazz)  {
 
+        QueryExecutor exec = new QueryExecutor(getConnection());
+        T dataset=null;
+        try {
+            dataset= exec.execQuery(String.format(GET_USER,id), result->{
+                result.next();
+                Class<?>[] parameterTypes = new Class<?>[clazz.getDeclaredFields().length];
+                Object[]   initargs = new Object[clazz.getDeclaredFields().length];
+                int index=0;
+                for (Field field: clazz.getDeclaredFields()){
+                    parameterTypes[index]= field.getType();
+                    initargs[index]= result.getObject(field.getName(),field.getType());
+                    index++;
+                }
+                 return (T) clazz.getDeclaredConstructor(parameterTypes).newInstance(initargs);
+            });
+        } catch (SQLException e) {
+            System.out.println("Не найдет пользователь с id - " + id)  ;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dataset;
     }
-
-    @Override
-    public void addUsers(String... names) throws SQLException {
-
-    }
-
-    @Override
-    public String getUserName(int id) throws SQLException {
-        return null;
-    }
-
-    @Override
-    public List<String> getAllNames() throws SQLException {
-        return null;
-    }
-
-    @Override
-    public List<UserDataSet> getAllUsers() throws SQLException {
-        return null;
-    }
-
-    @Override
-    public void deleteTables() throws SQLException {
-
-    }
-
     @Override
     public void close() throws Exception {
         connection.close();

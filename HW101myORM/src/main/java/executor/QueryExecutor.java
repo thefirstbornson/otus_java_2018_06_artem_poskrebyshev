@@ -21,7 +21,7 @@ public class QueryExecutor {
         }
     }
 
-    public int execUpdate(String update) throws SQLException {
+    public int execUpdate(String update, Object ... values) throws SQLException {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(update);
             return stmt.getUpdateCount();

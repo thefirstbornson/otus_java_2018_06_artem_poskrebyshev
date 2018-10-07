@@ -10,7 +10,7 @@ import java.sql.SQLException;
 public class DBServiceImpl implements DBService {
     private static final String CREATE_TABLE_USER = "create table if not exists user (id bigint(20) auto_increment" +
                                                                 ", name varchar(255), age int(3), primary key (id))";
-    private static final String ADD_USER = "insert into user (name,age) values ('%s','%s')";
+    private static final String ADD_USER = "insert into user () values ()";
     private static final String GET_USER = "select * from user where id='%d'";
     private final Connection connection;
 
@@ -24,25 +24,32 @@ public class DBServiceImpl implements DBService {
         QueryExecutor exec = new QueryExecutor(getConnection());
         int rows = 0;
         try {
-            rows = exec.execUpdate(String.format(ADD_USER
-                                                ,getValueFromField(user,"name")
-                                                ,getValueFromField(user,"age")));
+            rows = exec.execUpdate(ADD_USER,getValuesFromField(user,ADD_USER));
         } catch (SQLException e) {
             e.printStackTrace();
         }
         System.out.println("User added. Rows changed: " + rows);
     }
 
-    private <T> T getValueFromField (Object object, String field){
-        T value=null;
+    private Object[] getValuesFromField (Object object, String query){
+        StringBuffer queryBuffer = new StringBuffer(query);
+        int fldCount= object.getClass().getDeclaredFields().length;
+        Object[] array= new Object[fldCount];
         try {
-            Field f =object.getClass().getDeclaredField(field);
-            f.setAccessible(true);
-            value= (T) f.get(object);
-        } catch (IllegalAccessException|NoSuchFieldException e) {
+            int index=0;
+            for(Field f :object.getClass().getDeclaredFields()){
+                String sprt;
+                sprt = index>0 ? "," : "";
+                f.setAccessible(true);
+                array[index++]= f.get(object);
+                queryBuffer.insert(queryBuffer.indexOf(")"),sprt+f.getName())
+                           .insert(queryBuffer.lastIndexOf(")"),sprt+"?");
+            }
+            query =queryBuffer.toString();
+        } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
-        return value;
+        return array;
     };
 
     @Override
@@ -72,7 +79,7 @@ public class DBServiceImpl implements DBService {
     }
     @Override
     public void close() throws Exception {
-        connection.close();
+            System.out.println("Closing MyResource");
     }
 
     protected Connection getConnection() {

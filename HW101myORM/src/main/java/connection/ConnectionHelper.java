@@ -21,7 +21,8 @@ public class ConnectionHelper {
                     "user=dbuser&" +              //login
                     "password=T2Y42ZWG72y859N&" +          //password
                     "allowPublicKeyRetrieval=true&" +
-                    "useSSL=false";              //do not use Secure Sockets Layer
+                    "useSSL=false"+              //do not use Secure Sockets Layer
+                    "&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC";
 
 
             return DriverManager.getConnection(url);

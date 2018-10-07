@@ -1,10 +1,7 @@
 package executor;
 
 import java.lang.reflect.InvocationTargetException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class QueryExecutor {
     private final Connection connection;
@@ -22,9 +19,14 @@ public class QueryExecutor {
     }
 
     public int execUpdate(String update, Object ... values) throws SQLException {
-        try (Statement stmt = connection.createStatement()) {
-            stmt.execute(update);
-            return stmt.getUpdateCount();
+        try (PreparedStatement preparedStatement = connection.prepareStatement(update, Statement.RETURN_GENERATED_KEYS)) {
+            for (int i = 0; i < values.length; i++) {
+                preparedStatement.setObject(i + 1, values[i]);
+            }
+            preparedStatement.executeUpdate();
+            ResultSet rs = preparedStatement.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);
         }
     }
 

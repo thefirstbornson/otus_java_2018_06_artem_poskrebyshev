@@ -46,7 +46,6 @@ public class JsonObjectWriter {
     }
 
     private JsonArrayBuilder exportArray(Object object) {
-
         JsonArrayBuilder jsonArraytBuilder = Json.createArrayBuilder();
         int length = Array.getLength(object);
         for (int i = 0; i < length; i++) {

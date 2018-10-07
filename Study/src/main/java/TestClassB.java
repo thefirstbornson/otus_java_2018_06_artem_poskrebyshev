@@ -15,7 +15,7 @@ class TestClassB {
     TestClassA testClassA;
     int[] a;;
     String stroka ="stroka2";
-   String massiv[] ={"stroka1","str","adsf"};
+    String massiv[] ={"stroka1","str","adsf"};
     public TestClassB() {
          a = new int[]{1, 3, 5};
         this.b =1;
@@ -27,9 +27,7 @@ class TestClassB {
         this.c = 7588;
         this.boo = true;
         this.testClassA = new TestClassA();
-       numbers= new ArrayList<>(Arrays.asList(this.testClassA, this.testClassA));
-//        set  = new HashSet<>();
-//        set.add(1);
-//        set.add(2);
+        numbers= new ArrayList<>(Arrays.asList(this.testClassA, this.testClassA));
+
     }
 }

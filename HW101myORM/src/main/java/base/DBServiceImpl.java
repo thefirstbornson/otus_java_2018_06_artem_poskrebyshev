@@ -22,35 +22,46 @@ public class DBServiceImpl implements DBService {
     @Override
     public <T extends DataSet> void save(T user) {
         QueryExecutor exec = new QueryExecutor(getConnection());
-        int rows = 0;
         try {
-            rows = exec.execUpdate(ADD_USER,getValuesFromField(user,ADD_USER));
+            long userID = exec.execUpdate(modifyQuery(user,ADD_USER),getValuesFromField(user));
+            user.setId(userID);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        System.out.println("User added. Rows changed: " + rows);
+        System.out.println("User added.  " + user);
     }
 
-    private Object[] getValuesFromField (Object object, String query){
-        StringBuffer queryBuffer = new StringBuffer(query);
+    private Object[] getValuesFromField (Object object){
         int fldCount= object.getClass().getDeclaredFields().length;
         Object[] array= new Object[fldCount];
         try {
             int index=0;
             for(Field f :object.getClass().getDeclaredFields()){
-                String sprt;
-                sprt = index>0 ? "," : "";
                 f.setAccessible(true);
                 array[index++]= f.get(object);
-                queryBuffer.insert(queryBuffer.indexOf(")"),sprt+f.getName())
-                           .insert(queryBuffer.lastIndexOf(")"),sprt+"?");
             }
-            query =queryBuffer.toString();
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
         return array;
-    };
+    }
+
+    private String modifyQuery (Object object, String query){
+        StringBuilder stringBuilder = new StringBuilder(query);
+        int fldCount= object.getClass().getDeclaredFields().length;
+        Object[] array= new Object[fldCount];
+            int index=0;
+            String sprt;
+            for(Field f :object.getClass().getDeclaredFields()){
+                sprt = index>0 ? "," : "";
+                f.setAccessible(true);
+                stringBuilder.insert(stringBuilder.indexOf(")"),sprt+f.getName())
+                           .insert(stringBuilder.lastIndexOf(")"),sprt+"?");
+                index++;
+            }
+            query =stringBuilder.toString();
+        return query;
+    }
 
     @Override
     public <T extends DataSet> T load(long id, Class<T> clazz)  {
@@ -68,7 +79,7 @@ public class DBServiceImpl implements DBService {
                     initargs[index]= result.getObject(field.getName(),field.getType());
                     index++;
                 }
-                 return (T) clazz.getDeclaredConstructor(parameterTypes).newInstance(initargs);
+                 return clazz.getDeclaredConstructor(parameterTypes).newInstance(initargs);
             });
         } catch (SQLException e) {
             System.out.println("Не найдет пользователь с id - " + id)  ;
@@ -79,7 +90,6 @@ public class DBServiceImpl implements DBService {
     }
     @Override
     public void close() throws Exception {
-            System.out.println("Closing MyResource");
     }
 
     protected Connection getConnection() {

@@ -1,5 +1,7 @@
 package executor;
 
+import base.DataSetNotFoundException;
+
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 
@@ -10,7 +12,7 @@ public class QueryExecutor {
         this.connection = connection;
     }
 
-    public <T> T execQuery(String query,Object value, ResultHandler<T> handler) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+    public <T> T execQuery(String query,Object value, ResultHandler<T> handler) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException, DataSetNotFoundException {
         try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
             preparedStatement.setObject(1,value);
             preparedStatement.executeQuery();
@@ -25,9 +27,9 @@ public class QueryExecutor {
                 preparedStatement.setObject(i + 1, values[i]);
             }
             preparedStatement.executeUpdate();
-            ResultSet rs = preparedStatement.getGeneratedKeys();
-            rs.next();
-            return rs.getInt(1);
+            ResultSet result = preparedStatement.getGeneratedKeys();
+            result.next();
+            return result.getInt(1);
         }
     }
 

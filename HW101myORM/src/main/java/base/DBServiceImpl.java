@@ -1,6 +1,5 @@
 package base;
 
-import com.mysql.cj.jdbc.exceptions.NotUpdatable;
 import connection.*;
 import executor.QueryExecutor;
 
@@ -30,7 +29,7 @@ public class DBServiceImpl implements DBService {
     public <T extends DataSet> void save(T user) {
         QueryExecutor exec = new QueryExecutor(getConnection());
         try {
-            long userID = exec.execUpdate(insObjFieldsToQuery(ADD_USER,user),getValuesFromField(user));
+            long userID = exec.execUpdate(insObjFieldsToInsertQuery(ADD_USER,user),getValuesFromField(user));
             user.setId(userID);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -53,10 +52,8 @@ public class DBServiceImpl implements DBService {
         return array;
     }
 
-    private String insObjFieldsToQuery (String query,Object object){
+    private String insObjFieldsToInsertQuery(String query, Object object){
         StringBuilder stringBuilder = new StringBuilder(query);
-        int fldCount= object.getClass().getDeclaredFields().length;
-        Object[] array= new Object[fldCount];
             int index=0;
             String sprt;
             for(Field f :object.getClass().getDeclaredFields()){
@@ -72,9 +69,9 @@ public class DBServiceImpl implements DBService {
 
     private String insFirstMethodParamToQuery (String query,  Object obj, String methodName){
         StringBuilder stringBuilder = new StringBuilder(query);
-        Method[] declaredMethods = DBServiceImpl.class.getDeclaredMethods();
+        Method[] declaredMethods =obj.getClass().getDeclaredMethods();
         for (Method method : declaredMethods) {
-            if (method.getName() == methodName) {
+            if (method.getName().equals(methodName)) {
                 Parameter[] parameters = method.getParameters();
                 stringBuilder.insert(stringBuilder.indexOf("="),parameters[0].getName())
                             .insert(stringBuilder.lastIndexOf("=")+1,"?");
@@ -100,30 +97,30 @@ public class DBServiceImpl implements DBService {
         T dataset=null;
         try {
             dataset= exec.execQuery(query,id,result->{
-                if (!result.next()) {throw new SQLDataException();};
+                if (!result.next()) {
+                        throw new DataSetNotFoundException("No such user(id="+id+") found.");
+                }
 
-                Constructor ctor = null;
+                Constructor datasetDefaultConstructor = null;
                 for (Constructor constructor: clazz.getDeclaredConstructors()) {
                     if (constructor.getGenericParameterTypes().length == 0) {
-                        ctor = constructor;
+                        datasetDefaultConstructor = constructor;
                         break;
                     }
                 }
 
-                if (ctor != null) {ctor.setAccessible(true);}
+                if (datasetDefaultConstructor != null) {datasetDefaultConstructor.setAccessible(true);}
                     else {throw new NullPointerException();}
 
-                T dataset0 = (T) ctor.newInstance();
+                T dataset0 = (T) datasetDefaultConstructor.newInstance();
 
-                List<Field> clazzAllFields = getAllFields (new ArrayList<Field>(),clazz);
+                List<Field> clazzAllFields = getAllFields (new ArrayList<>(),clazz);
                     for(Field fieldClazz: clazzAllFields){
                         fieldClazz.setAccessible(true);
                         fieldClazz.set(dataset0,result.getObject(fieldClazz.getName(),fieldClazz.getType()));
                     }
                  return dataset0;
             });
-        } catch (SQLException e) {
-            System.out.println("Не найден пользователь с id - " + id)  ;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -137,3 +134,4 @@ public class DBServiceImpl implements DBService {
         return connection;
     }
 }
+

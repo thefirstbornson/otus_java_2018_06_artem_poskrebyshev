@@ -10,10 +10,11 @@ public class QueryExecutor {
         this.connection = connection;
     }
 
-    public <T> T execQuery(String query, ResultHandler<T> handler) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        try(Statement stmt = connection.createStatement()) {
-            stmt.execute(query);
-            ResultSet result = stmt.getResultSet();
+    public <T> T execQuery(String query,Object value, ResultHandler<T> handler) throws SQLException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        try(PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+            preparedStatement.setObject(1,value);
+            preparedStatement.executeQuery();
+            ResultSet result = preparedStatement.getResultSet();
             return handler.handle(result);
         }
     }

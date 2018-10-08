@@ -28,9 +28,7 @@ public class ObjectVisitor implements Visitor {
         System.out.println(_long.toString());
     }
 
-    public void visitDouble(Double _double) {
-        System.out.println(_double.toString());
-    }
+    public void visitDouble(Double _double) { System.out.println(_double.toString()); }
 
     public void visitCharacter(Character _char) {
         System.out.println(_char.toString());

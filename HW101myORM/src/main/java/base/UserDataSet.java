@@ -9,6 +9,9 @@ public class UserDataSet extends DataSet {
         this.age = age;
     }
 
+    public UserDataSet() {
+    }
+
     public long getId() {
         return id;
     }

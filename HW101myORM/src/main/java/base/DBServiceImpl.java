@@ -13,11 +13,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class DBServiceImpl implements DBService {
     private static final String CREATE_TABLE_USER = "create table if not exists user (id bigint(20) auto_increment" +
                                                                 ", name varchar(255), age int(3), primary key (id))";
-    private static final String ADD_USER = "insert into user () values ()";
+    private static final String ADD_USER = "insert into user (%s) values (%s)";
     private static final String GET_USER = "select * from user where =";
     private final Connection connection;
 
@@ -53,18 +56,13 @@ public class DBServiceImpl implements DBService {
     }
 
     private String insObjFieldsToInsertQuery(String query, Object object){
-        StringBuilder stringBuilder = new StringBuilder(query);
-            int index=0;
-            String sprt;
-            for(Field f :object.getClass().getDeclaredFields()){
-                sprt = index>0 ? "," : "";
-                f.setAccessible(true);
-                stringBuilder.insert(stringBuilder.indexOf(")"),sprt+f.getName())
-                           .insert(stringBuilder.lastIndexOf(")"),sprt+"?");
-                index++;
-            }
-            query =stringBuilder.toString();
-        return query;
+        String fields = Arrays.stream(object.getClass().getDeclaredFields())
+                              .map((f) -> f.getName())
+                              .collect(Collectors.joining(","));
+        String values = Arrays.stream(object.getClass().getDeclaredFields())
+                              .map((f) -> "?")
+                              .collect(Collectors.joining(","));
+        return String.format(query,fields,values);
     }
 
     private String insFirstMethodParamToQuery (String query,  Object obj, String methodName){

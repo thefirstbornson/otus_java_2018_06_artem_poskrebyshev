@@ -15,7 +15,7 @@ public class Main {
             //create table if not exists user (id bigint(20) auto_increment, name varchar(255), age int(3), primary key (id))
             DataSet usr = new UserDataSet("Peter", 51);
             dbservice.save(usr);
-            System.out.println(dbservice.load(19, UserDataSet.class).toString());
+            System.out.println(dbservice.load(23, UserDataSet.class).toString());
         } catch (Exception e) {
             e.printStackTrace();
         }

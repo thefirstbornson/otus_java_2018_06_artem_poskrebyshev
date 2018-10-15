@@ -8,14 +8,11 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.sql.Connection;
-import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class DBServiceImpl implements DBService {
     private static final String CREATE_TABLE_USER = "create table if not exists user (id bigint(20) auto_increment" +
@@ -41,6 +38,7 @@ public class DBServiceImpl implements DBService {
     }
 
     private Object[] getValuesFromField (Object object){
+
         int fldCount= object.getClass().getDeclaredFields().length;
         Object[] array= new Object[fldCount];
         try {
@@ -57,7 +55,7 @@ public class DBServiceImpl implements DBService {
 
     private String insObjFieldsToInsertQuery(String query, Object object){
         String fields = Arrays.stream(object.getClass().getDeclaredFields())
-                              .map((f) -> f.getName())
+                              .map(Field::getName)
                               .collect(Collectors.joining(","));
         String values = Arrays.stream(object.getClass().getDeclaredFields())
                               .map((f) -> "?")
@@ -72,7 +70,7 @@ public class DBServiceImpl implements DBService {
             if (method.getName().equals(methodName)) {
                 Parameter[] parameters = method.getParameters();
                 stringBuilder.insert(stringBuilder.indexOf("="),parameters[0].getName())
-                            .insert(stringBuilder.lastIndexOf("=")+1,"?");
+                             .insert(stringBuilder.lastIndexOf("=")+1,"?");
                 break;
             }
         }

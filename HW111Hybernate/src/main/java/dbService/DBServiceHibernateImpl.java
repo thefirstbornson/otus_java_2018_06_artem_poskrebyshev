@@ -7,6 +7,7 @@ import datasets.PhoneDataSet;
 import datasets.UserDataSet;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
@@ -39,8 +40,11 @@ public class DBServiceHibernateImpl implements DBService {
     @Override
     public <T extends DataSet> void save(T user) {
         try (Session session = sessionFactory.openSession()) {
+            Transaction transaction = session.getTransaction();
+            transaction.begin();
             UserDataSetDAO dao = new UserDataSetDAO(session);
             dao.save((UserDataSet)user);
+            transaction.commit();
         }
     }
 

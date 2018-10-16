@@ -12,11 +12,12 @@ public class Main {
         DBServiceHibernateImpl dbService = new DBServiceHibernateImpl();
         String status = ((DBServiceHibernateImpl) dbService).getLocalStatus();
         System.out.println("Status: " + status);
-        UserDataSet usr = new UserDataSet("Ann", 45);
+
+        UserDataSet usr = new UserDataSet("Peter", 45);
         List<PhoneDataSet> listPhone = new ArrayList<>();
-        listPhone.add(new PhoneDataSet("+79062137717", usr));
-        listPhone.add(new PhoneDataSet("+79062193069", usr));
-        listPhone.add(new PhoneDataSet("+79062198556", usr));
+        listPhone.add(new PhoneDataSet("+79062137713", usr));
+        listPhone.add(new PhoneDataSet("+79062193063", usr));
+        listPhone.add(new PhoneDataSet("+79062198553", usr));
         usr.setPhones(listPhone);
         dbService.save(usr);
         System.out.println(dbService.load(1, UserDataSet.class));

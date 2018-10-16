@@ -3,6 +3,7 @@ package datasets;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "user")
@@ -56,7 +57,9 @@ public class UserDataSet extends DataSet {
         return "UserDataSet{" +
                 "id=" + id +
                 ", name= " + name +
-                ", age= " + age + '}'+
-                ", phone numbers =" + phones.stream().toString();
+                ", age= " + age +
+                ", phone numbers = " + phones.stream()
+                                             .map(f->f.getNumber())
+                                             .collect(Collectors.joining(", "))+'}';
     }
 }

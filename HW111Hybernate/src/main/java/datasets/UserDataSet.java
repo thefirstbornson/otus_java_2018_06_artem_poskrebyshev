@@ -1,6 +1,8 @@
 package datasets;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -10,6 +12,9 @@ public class UserDataSet extends DataSet {
 
     @Column(name = "age")
     private int age;
+
+    @OneToMany(mappedBy = "userDataSet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<PhoneDataSet> phones = new ArrayList<>();
 
     public UserDataSet() {
     }
@@ -43,10 +48,15 @@ public class UserDataSet extends DataSet {
         return age;
     }
 
+    public void setPhones(List<PhoneDataSet> phones) {
+        this.phones = phones;
+    }
+
     public String toString() {
         return "UserDataSet{" +
                 "id=" + id +
                 ", name= " + name +
-                ", age= " + age + '}';
+                ", age= " + age + '}'+
+                ", phone numbers =" + phones.stream().toString();
     }
 }

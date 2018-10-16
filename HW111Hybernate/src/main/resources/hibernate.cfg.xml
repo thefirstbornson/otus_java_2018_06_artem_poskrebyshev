@@ -10,7 +10,7 @@
         <property name="hibernate.connection.username">dbuser</property>
         <property name="hibernate.connection.password">T2Y42ZWG72y859N</property>
         <property name="hibernate.show_sql">true</property>
-        <property name="hibernate.hbm2ddl.auto">update</property>
+        <property name="hibernate.hbm2ddl.auto">create</property>
         <property name="hibernate.connection.useSSL">false</property>
         <property name="hibernate.enable_lazy_load_no_trans">true</property>
     </session-factory>

@@ -17,6 +17,18 @@ public class UserDataSet extends DataSet {
     @OneToMany(mappedBy = "userDataSet", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PhoneDataSet> phones = new ArrayList<>();
 
+    @OneToOne(
+            mappedBy = "userDataSet",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            fetch = FetchType.LAZY
+    )
+    private AddressDataSet address;
+
+    public void setAddress(AddressDataSet address) {
+        this.address = address;
+    }
+
     public UserDataSet() {
     }
 
@@ -59,6 +71,7 @@ public class UserDataSet extends DataSet {
                 ", age= " + age +
                 ", phone numbers = " + phones.stream()
                                              .map(PhoneDataSet::getNumber)
-                                             .collect(Collectors.joining(", "))+'}';
+                                             .collect(Collectors.joining(", "))+
+                ", address = " + address.getStreet()+'}';
     }
 }

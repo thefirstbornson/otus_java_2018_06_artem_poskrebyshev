@@ -5,10 +5,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "phone_numbers")
 public class PhoneDataSet {
-
-
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "phone_number", nullable = false)

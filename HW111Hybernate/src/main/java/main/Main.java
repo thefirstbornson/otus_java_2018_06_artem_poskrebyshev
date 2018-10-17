@@ -1,6 +1,7 @@
 package main;
 
 import base.DBService;
+import datasets.AddressDataSet;
 import datasets.PhoneDataSet;
 import datasets.UserDataSet;
 import dbService.DBServiceHibernateImpl;
@@ -18,6 +19,7 @@ public class Main {
         listPhone.add(new PhoneDataSet("+79062193063", usr));
         listPhone.add(new PhoneDataSet("+79062198553", usr));
         usr.setPhones(listPhone);
+        usr.setAddress(new AddressDataSet("Kuibysheva",usr));
 
         dbService.save(usr);
         System.out.println(dbService.load(1, UserDataSet.class));

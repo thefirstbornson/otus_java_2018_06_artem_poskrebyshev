@@ -2,25 +2,29 @@ package datasets;
 
 import javax.persistence.*;
 
-@Entity
-@Table(name = "adress")
-public class AddressDataSet {
+    @Entity
+    @Table(name = "address")
+    public class AddressDataSet {
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        private Long id;
 
-    @Id
-    @GeneratedValue
-    private Long id;
-
-    @Column(name = "adress", nullable = false)
+    @Column(name = "street", nullable = false)
     private String street;
 
-    public AddressDataSet(String street) {
-        this.street = street;
-    }
-    public AddressDataSet() {
-        this.street = street;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "address_id")
+    private UserDataSet userDataSet;
+
+    public AddressDataSet(){
     }
 
-    public String getStreet() {
+        public AddressDataSet(String street, UserDataSet userDataSet) {
+            this.street = street;
+            this.userDataSet = userDataSet;
+        }
+
+        public String getStreet() {
         return street;
     }
 

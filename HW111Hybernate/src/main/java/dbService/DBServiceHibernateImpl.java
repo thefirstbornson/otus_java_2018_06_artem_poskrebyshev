@@ -1,6 +1,7 @@
 package dbService;
 
 import base.DBService;
+import datasets.AddressDataSet;
 import datasets.DataSet;
 import datasets.PhoneDataSet;
 import datasets.UserDataSet;
@@ -26,6 +27,7 @@ public class DBServiceHibernateImpl implements DBService {
         configuration.addAnnotatedClass(DataSet.class);
         configuration.addAnnotatedClass(UserDataSet.class);
         configuration.addAnnotatedClass(PhoneDataSet.class);
+        configuration.addAnnotatedClass(AddressDataSet.class);
 
         sessionFactory = createSessionFactory(configuration);
     }

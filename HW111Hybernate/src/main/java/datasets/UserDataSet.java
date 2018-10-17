@@ -21,7 +21,6 @@ public class UserDataSet extends DataSet {
     }
 
     public UserDataSet(String name, int age) {
-        //this.setId(-1);
         this.name = name;
         this.age = age;
     }
@@ -59,7 +58,7 @@ public class UserDataSet extends DataSet {
                 ", name= " + name +
                 ", age= " + age +
                 ", phone numbers = " + phones.stream()
-                                             .map(f->f.getNumber())
+                                             .map(PhoneDataSet::getNumber)
                                              .collect(Collectors.joining(", "))+'}';
     }
 }

@@ -1,7 +1,6 @@
 package dbService;
 
 import base.DBService;
-import dao.UserDataSetDAO;
 import datasets.DataSet;
 import datasets.PhoneDataSet;
 import datasets.UserDataSet;
@@ -13,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 
 
 public class DBServiceHibernateImpl implements DBService {
@@ -42,26 +42,33 @@ public class DBServiceHibernateImpl implements DBService {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
-            UserDataSetDAO dao = new UserDataSetDAO(session);
-            dao.save((UserDataSet)user);
+
+            String className= user.getClass().getName().substring(user.getClass().getName().lastIndexOf('.')+1);
+            Object dao = Class.forName("dao."+className+"DAO").newInstance();
+            dao.getClass().getMethod("setSession",Session.class).invoke(dao,session);
+            dao.getClass().getMethod("save",user.getClass()).invoke(dao,user);
+
             transaction.commit();
+
+        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | ClassNotFoundException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public <T extends DataSet> T load(long id, Class<T> clazz) {
+        Object dataset=null;
         try (Session session = sessionFactory.openSession()) {
-            UserDataSetDAO dao = new UserDataSetDAO(session);
-            UserDataSet object = dao.load(id, (Class<UserDataSet>) clazz);
-            return (T) object;
+
+            String className= clazz.getName().substring(clazz.getName().lastIndexOf('.')+1);
+            Object dao = Class.forName("dao."+className+"DAO").newInstance();
+            dao.getClass().getMethod("setSession",Session.class).invoke(dao,session);
+            dataset = dao.getClass().getMethod("load",long.class, Class.class).invoke(dao,id,clazz);
+
+        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | InstantiationException e) {
+            e.printStackTrace();
         }
-
-    }
-
-    public String getLocalStatus() {
-        HibernateExecutor executor = new HibernateExecutor();
-        return executor.getFromSession(sessionFactory
-                                      ,session -> session.getTransaction().getStatus().name());
+        return (T) dataset;
     }
 
     @Override

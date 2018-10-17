@@ -10,6 +10,13 @@ public class UserDataSetDAO {
         this.session = session;
     }
 
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public UserDataSetDAO() {
+    }
+
     public void save(UserDataSet dataSet) {
         session.save(dataSet);
     }

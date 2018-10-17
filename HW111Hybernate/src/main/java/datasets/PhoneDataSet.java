@@ -1,5 +1,7 @@
 package datasets;
+
 import javax.persistence.*;
+
 @Entity
 @Table(name = "phone_numbers")
 public class PhoneDataSet {
@@ -26,6 +28,4 @@ public class PhoneDataSet {
             this.number = number;
             this.userDataSet = userDataSet;
         }
-
-
     }

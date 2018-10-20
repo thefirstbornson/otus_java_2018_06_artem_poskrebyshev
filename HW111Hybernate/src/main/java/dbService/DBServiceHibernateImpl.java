@@ -1,6 +1,8 @@
 package dbService;
 
 import base.DBService;
+import dao.DAO;
+import dao.DaoFactory;
 import datasets.AddressDataSet;
 import datasets.DataSet;
 import datasets.PhoneDataSet;
@@ -44,33 +46,29 @@ public class DBServiceHibernateImpl implements DBService {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
             transaction.begin();
-
-            String className= user.getClass().getName().substring(user.getClass().getName().lastIndexOf('.')+1);
-            Object dao = Class.forName("dao."+className+"DAO").newInstance();
-            dao.getClass().getMethod("setSession",Session.class).invoke(dao,session);
-            dao.getClass().getMethod("save",user.getClass()).invoke(dao,user);
-
+            DAO dao = DaoFactory.getDataSetDAO(user.getClass(), session);
+            dao.save(user);
             transaction.commit();
 
-        } catch (IllegalAccessException | InstantiationException | NoSuchMethodException | ClassNotFoundException | InvocationTargetException e) {
-            e.printStackTrace();
         }
     }
 
     @Override
     public <T extends DataSet> T load(long id, Class<T> clazz) {
-        Object dataset=null;
+        Object dataset = null;
         try (Session session = sessionFactory.openSession()) {
-
-            String className= clazz.getName().substring(clazz.getName().lastIndexOf('.')+1);
-            Object dao = Class.forName("dao."+className+"DAO").newInstance();
-            dao.getClass().getMethod("setSession",Session.class).invoke(dao,session);
-            dataset = dao.getClass().getMethod("load",long.class, Class.class).invoke(dao,id,clazz);
-
-        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | InstantiationException e) {
-            e.printStackTrace();
+            DAO dao = DaoFactory.getDataSetDAO(clazz, session);
+            dao.load(id, clazz);
+//            String className= clazz.getName().substring(clazz.getName().lastIndexOf('.')+1);
+//            Object dao = Class.forName("dao."+className+"DAO").newInstance();
+//            dao.getClass().getMethod("setSession",Session.class).invoke(dao,session);
+//            dataset = dao.getClass().getMethod("load",long.class, Class.class).invoke(dao,id,clazz);
+//
+//        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | InstantiationException e) {
+//            e.printStackTrace();
+//        }
+            return (T) dataset;
         }
-        return (T) dataset;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class Main {
         usr.setAddress(new AddressDataSet("Mayskiy per",usr));
 
         dbService.save(usr);
-        //System.out.println(dbService.load(1, UserDataSet.class));
+        System.out.println(dbService.load(1, UserDataSet.class));
         dbService.close();
     }
 }

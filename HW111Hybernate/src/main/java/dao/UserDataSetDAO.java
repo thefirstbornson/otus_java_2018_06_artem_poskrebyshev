@@ -1,27 +1,26 @@
 package dao;
 
+import datasets.DataSet;
 import datasets.UserDataSet;
 import org.hibernate.Session;
 
-public class UserDataSetDAO {
+public class UserDataSetDAO implements DAO {
     private Session session;
 
     public UserDataSetDAO(Session session) {
         this.session = session;
     }
 
-    public void setSession(Session session) {
-        this.session = session;
-    }
-
     public UserDataSetDAO() {
     }
 
-    public void save(UserDataSet dataSet) {
-        session.save(dataSet);
+    @Override
+    public <T extends DataSet> void save(T dataset) {
+        session.save(dataset);
     }
 
-    public UserDataSet load(long id, Class<UserDataSet> clazz) {
+    @Override
+    public <T extends DataSet> T load(long id, Class<T> clazz) {
         return session.load(clazz, id);
     }
 }

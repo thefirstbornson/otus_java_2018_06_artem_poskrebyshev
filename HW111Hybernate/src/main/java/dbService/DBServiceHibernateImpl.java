@@ -55,19 +55,9 @@ public class DBServiceHibernateImpl implements DBService {
 
     @Override
     public <T extends DataSet> T load(long id, Class<T> clazz) {
-        Object dataset = null;
         try (Session session = sessionFactory.openSession()) {
             DAO dao = DaoFactory.getDataSetDAO(clazz, session);
-            dao.load(id, clazz);
-//            String className= clazz.getName().substring(clazz.getName().lastIndexOf('.')+1);
-//            Object dao = Class.forName("dao."+className+"DAO").newInstance();
-//            dao.getClass().getMethod("setSession",Session.class).invoke(dao,session);
-//            dataset = dao.getClass().getMethod("load",long.class, Class.class).invoke(dao,id,clazz);
-//
-//        } catch (IllegalAccessException | InvocationTargetException | NoSuchMethodException | ClassNotFoundException | InstantiationException e) {
-//            e.printStackTrace();
-//        }
-            return (T) dataset;
+            return  dao.load(id, clazz);
         }
     }
 

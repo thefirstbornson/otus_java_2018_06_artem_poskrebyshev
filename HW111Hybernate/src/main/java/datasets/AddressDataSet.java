@@ -13,7 +13,7 @@ import javax.persistence.*;
     private String street;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "address_id")
+    @JoinColumn(name = "userDataSet_id")
     private UserDataSet userDataSet;
 
     public AddressDataSet(){

@@ -16,6 +16,7 @@ import org.hibernate.service.ServiceRegistry;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 
 public class DBServiceHibernateImpl implements DBService {
@@ -24,7 +25,7 @@ public class DBServiceHibernateImpl implements DBService {
     public DBServiceHibernateImpl() {
 
         Configuration configuration = new Configuration()
-                .configure(new File("HW111Hybernate/src/main/resources/hibernate.cfg.xml"));
+                .configure(new File("HW121Webserver/src/main/resources/hibernate.cfg.xml"));
 
         configuration.addAnnotatedClass(DataSet.class);
         configuration.addAnnotatedClass(UserDataSet.class);
@@ -58,6 +59,14 @@ public class DBServiceHibernateImpl implements DBService {
         try (Session session = sessionFactory.openSession()) {
             DAO dao = DaoFactory.getDataSetDAO(clazz, session);
             return  dao.load(id, clazz);
+        }
+    }
+
+    @Override
+    public <T extends DataSet> List<T> readAll(Class<T> clazz) {
+        try (Session session = sessionFactory.openSession()) {
+            DAO dao = DaoFactory.getDataSetDAO(clazz, session);
+            return dao.readAll(clazz);
         }
     }
 

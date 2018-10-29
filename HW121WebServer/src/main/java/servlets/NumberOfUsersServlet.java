@@ -1,5 +1,9 @@
 package servlets;
 
+import base.DBService;
+import datasets.DataSet;
+import datasets.UserDataSet;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -8,17 +12,15 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AdminServlet extends HttpServlet {
-
-    public static final String USER_PARAMETER_NAME = "addname";
-    private static final String ADMIN_PAGE_TEMPLATE = "admin.html";
-
+public class NumberOfUsersServlet extends HttpServlet {
+    private static final String GETUSER_PAGE_TEMPLATE = "numusers.html";
 
     private final TemplateProcessor templateProcessor;
+    private final DBService dbService;
 
-    @SuppressWarnings("WeakerAccess")
-    public AdminServlet(TemplateProcessor templateProcessor) {
+    public NumberOfUsersServlet(TemplateProcessor templateProcessor, DBService dbService) {
         this.templateProcessor = templateProcessor;
+        this.dbService = dbService;
     }
 
     public void doGet(HttpServletRequest request,
@@ -28,20 +30,15 @@ public class AdminServlet extends HttpServlet {
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws ServletException, IOException {
-        String requestUser = request.getParameter(USER_PARAMETER_NAME);
+
+        Integer usersNum = dbService.readAll(UserDataSet.class).size();
+        String value = usersNum!=null?usersNum.toString():"not found";
+
+        String page = templateProcessor.getPage(GETUSER_PAGE_TEMPLATE, Map.of("userNum", value));//save to the page
 
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
-
-        String page = getPage(requestUser); //save to the page
         response.getWriter().println(page);
     }
-
-    private String getPage(String user) throws IOException {
-        Map<String, Object> pageVariables = new HashMap<>();
-        pageVariables.put("user", user == null ? "" : user);
-        return templateProcessor.getPage(ADMIN_PAGE_TEMPLATE, pageVariables);
-    }
-
 
 }

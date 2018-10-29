@@ -43,7 +43,6 @@ public class GetUserServlet extends HttpServlet {
                 e.printStackTrace();
                 value = "not found";
             }
-
         }
 
         String page = templateProcessor.getPage(GETUSER_PAGE_TEMPLATE, Map.of("user", value));

@@ -1,7 +1,7 @@
 package datasets;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+//import javax.validation.constraints.NotBlank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "user")
 public class UserDataSet extends DataSet {
-    @NotBlank
+   // @NotBlank
     @Column(name = "name", nullable= false)
     private String name;
 
@@ -50,16 +50,32 @@ public class UserDataSet extends DataSet {
     public void setAge(int age) {
         this.age = age;
     }
+    public void setAge(String age) {
+        setAge(Integer.parseInt(age));
+    }
 
     public void setAddress(AddressDataSet address) {
         this.address = address;
     }
+
+    public void setAddress(String address) {
+        this.address=new AddressDataSet(address, this);
+    }
+
     public long getId() {
         return id;
     }
 
     public void setPhones(List<PhoneDataSet> phones) {
         this.phones = phones;
+    }
+
+    public void setPhones(String phones) {
+        List<PhoneDataSet> listPhone = new ArrayList<>();
+        for (String s : phones.split(",")) {
+            listPhone.add(new PhoneDataSet(s, this));
+        }
+        setPhones(listPhone);
     }
 
     public String getName() {
@@ -69,8 +85,6 @@ public class UserDataSet extends DataSet {
     public int getAge() {
         return age;
     }
-
-
 
     public String toString() {
         return "UserDataSet{" +

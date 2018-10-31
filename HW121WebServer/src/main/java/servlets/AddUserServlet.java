@@ -2,15 +2,16 @@ package servlets;
 
 import base.DBService;
 import datasets.DataSet;
-import datasets.DataSetHelper;
 import datasets.UserDataSet;
+import org.apache.commons.lang3.text.WordUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Enumeration;
 import java.util.Map;
 
 public class AddUserServlet extends HttpServlet {
@@ -35,8 +36,16 @@ public class AddUserServlet extends HttpServlet {
         String value="";
         if (request.getParameterNames().hasMoreElements()) {
             DataSet user=new UserDataSet();
-            for (Field field : user.getClass().getDeclaredFields()) {
-                DataSetHelper.setDataSetField(user,field.getName(),request.getParameter(field.getName()));
+            Enumeration<String> en = request.getParameterNames();
+            while (en.hasMoreElements()){
+                try {
+                    String parameter = en.nextElement();
+                    user.getClass().getMethod("set"+ WordUtils.capitalize(parameter)
+                                             ,String.class).invoke(user
+                                                    ,String.join(",", request.getParameterValues(parameter)));
+                } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
             }
             dbService.save(user);
             value = user.toString();

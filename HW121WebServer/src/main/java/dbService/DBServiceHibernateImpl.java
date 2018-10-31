@@ -25,7 +25,7 @@ public class DBServiceHibernateImpl implements DBService {
     public DBServiceHibernateImpl() {
 
         Configuration configuration = new Configuration()
-                .configure(new File("HW121Webserver/src/main/resources/hibernate.cfg.xml"));
+                .configure(new File("HW121WebServer/src/main/java/resources/hibernate.cfg.xml"));
 
         configuration.addAnnotatedClass(DataSet.class);
         configuration.addAnnotatedClass(UserDataSet.class);

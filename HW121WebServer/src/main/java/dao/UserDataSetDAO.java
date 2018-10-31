@@ -1,7 +1,6 @@
 package dao;
 
 import datasets.DataSet;
-import datasets.UserDataSet;
 import org.hibernate.Session;
 
 import javax.persistence.criteria.CriteriaBuilder;

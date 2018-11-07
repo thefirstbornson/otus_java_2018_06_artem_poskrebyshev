@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Main {
+public class TMain {
     int[] a = {2, 3, 1};
     int[] b = {4, 6, 5};
     int[] c = {9,8,9,2,7,2,1,5,3,4,1,0,3};
@@ -11,7 +11,7 @@ public class Main {
 //        for (int i:both) {
 //            System.out.print(i);
 //        }
-       Main m = new Main();
+       TMain m = new TMain();
 //        Thread t1 = new Thread(()->{m.sort();});
 //        Thread t2 = new Thread(()->{m.sort();});
 //
@@ -58,7 +58,6 @@ public class Main {
 
         System.out.println();
         for (List list: subLists) {
-
             Thread t = new Thread(()->{Collections.sort(list);});
             t.start();
             t.join();
@@ -66,15 +65,27 @@ public class Main {
             System.out.println();
         }
         System.out.println();
-
+        List l = m.merge(subLists);
 
     }
 
      List merge(ArrayList<List> subLists){
         List res = new ArrayList(subLists.get(0));
-        for(int i=1;i<subLists.size();i++){
+        List src = new ArrayList(subLists.get(1));
+         //for(int i=0;i<res.size();i++){
+             int j=0;
+             while (j<res.size()){
+                if ( (int)res.get(j) > (int) src.get(0)) {
+                    res.add(j,src.get(0));
+                    src.remove(0);
+                }
+                j++;
+             }
+             res.addAll(src);
+            // for(int j=1;j<subLists.size();j++){
 
-        }
+            //}
+       // }
 
 
        return null;

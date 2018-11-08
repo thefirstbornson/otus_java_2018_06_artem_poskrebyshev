@@ -1,15 +1,15 @@
 import java.util.*;
 
 public class TMain {
+    private final int sourceSize = 11;
+    private final int  countOfPartitions = 5;
+    private final int  lenOfSubList ;
+
     public TMain() {
         lenOfSubList = sourceSize % countOfPartitions == 0
                 ? sourceSize / countOfPartitions
                 : sourceSize / countOfPartitions + 1;
     }
-
-    private final int sourceSize = 10;
-    private final int  countOfPartitions = 5;
-    private final int  lenOfSubList ;
 
     public int getSourceSize() {
         return sourceSize;
@@ -23,13 +23,15 @@ public class TMain {
         return lenOfSubList;
     }
 
-    public void setRandomValues(List list){
+    public List<Integer> createAndSetRandValues(int sizeOfList){
+        List<Integer> list = new ArrayList<>(sizeOfList);
         Random rand = new Random();
         rand.setSeed(System.currentTimeMillis());
-        for (int i = 0; i < list.size() ; i++) {
+        for (int i = 0; i < sizeOfList ; i++) {
             Integer r = rand.nextInt() % 256;
             list.add(r);
         }
+        return list;
     }
 
     public List<List<Integer>> splitList (List<Integer> list,int chunk){
@@ -37,7 +39,7 @@ public class TMain {
         int i = 0;
         int j = this.getLenOfSubList();
         while (this.getSourceSize() > i) {
-            if (list.size() - i > this.getLenOfSubList()) {
+            if (chunk - i > this.getLenOfSubList()) {
                 subLists.add(list.subList(i, j));
                 i +=  this.getLenOfSubList();
                 j +=  this.getLenOfSubList();
@@ -63,7 +65,7 @@ public class TMain {
             List<Integer> src = new ArrayList<>(subLists.get(k));
             int j = 0;
             while (j < res.size() && src.size() > 0) {
-                if ((int) res.get(j) > (int) src.get(0)) {
+                if (res.get(j) > src.get(0)) {
                     res.add(j, src.get(0));
                     src.remove(0);
                 }
@@ -77,18 +79,19 @@ public class TMain {
     public static void main(String[] args) throws InterruptedException {
         TMain m = new TMain();
 
-        List<Integer> source = new ArrayList<>(m.getSourceSize());
-        m.setRandomValues(source);
-        source.forEach(System.out::print);
+        List<Integer> source = m.createAndSetRandValues(m.getSourceSize());
+        source.forEach(x->System.out.print(" "+x));
         List<List<Integer>> subLists =m.splitList(source,m.getCountOfPartitions());
 
-
         System.out.println();
+
         for (List<Integer> list : subLists) {
             m.sortListByThread(list);
         }
+
         System.out.println();
-        m.merge(subLists).forEach(System.out::println);
+
+        m.merge(subLists).forEach(x->System.out.print(" "+x));
 
     }
 

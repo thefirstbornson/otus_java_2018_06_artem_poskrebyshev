@@ -1,62 +1,66 @@
 import java.util.*;
 
 public class TMain {
-    int[] a = {2, 3, 1};
-    int[] b = {4, 6, 5};
-    int[] c = {9, 8, 9, 2, 7, 2, 1, 5, 3, 4, 1, 0, 3};
-
-    public static void main(String[] args) throws InterruptedException {
-        TMain m = new TMain();
-
-        int sourceSize = 10;
-        int countOfPartitions = 4;
-        int lenOfSubList = sourceSize % countOfPartitions == 0
+    public TMain() {
+        lenOfSubList = sourceSize % countOfPartitions == 0
                 ? sourceSize / countOfPartitions
                 : sourceSize / countOfPartitions + 1;
-
-        ArrayList source = new ArrayList(sourceSize);
-        Random rand = new Random();
-        rand.setSeed(System.currentTimeMillis());
-        for (int i = 0; i < sourceSize; i++) {
-            Integer r = rand.nextInt() % 256;
-            source.add(r);
-        }
-        source.stream().forEach(System.out::print);
-
-
-        ArrayList<List> subLists = new ArrayList(countOfPartitions);
-        int i = 0;
-        int j = lenOfSubList;
-        while (sourceSize > i) {
-            if (source.size() - i > lenOfSubList) {
-                subLists.add(source.subList(i, j));
-                i += lenOfSubList;
-                j += lenOfSubList;
-            } else {
-                subLists.add(source.subList(i, source.size()));
-                i = source.size();
-            }
-        }
-
-        System.out.println();
-        for (List list : subLists) {
-            Thread t = new Thread(() -> {
-                Collections.sort(list);
-            });
-            t.start();
-            t.join();
-            list.stream().forEach(System.out::print);
-            System.out.println();
-        }
-        System.out.println();
-        m.merge(subLists).stream().forEach(System.out::println);
-
     }
 
-    List merge(ArrayList<List> subLists) {
-        List res = new ArrayList(subLists.get(0));
+    private final int sourceSize = 10;
+    private final int  countOfPartitions = 5;
+    private final int  lenOfSubList ;
+
+    public int getSourceSize() {
+        return sourceSize;
+    }
+
+    public int getCountOfPartitions() {
+        return countOfPartitions;
+    }
+
+    public int getLenOfSubList() {
+        return lenOfSubList;
+    }
+
+    public void setRandomValues(List list){
+        Random rand = new Random();
+        rand.setSeed(System.currentTimeMillis());
+        for (int i = 0; i < list.size() ; i++) {
+            Integer r = rand.nextInt() % 256;
+            list.add(r);
+        }
+    }
+
+    public List<List<Integer>> splitList (List<Integer> list,int chunk){
+        List<List<Integer>> subLists =new ArrayList<>(chunk);
+        int i = 0;
+        int j = this.getLenOfSubList();
+        while (this.getSourceSize() > i) {
+            if (list.size() - i > this.getLenOfSubList()) {
+                subLists.add(list.subList(i, j));
+                i +=  this.getLenOfSubList();
+                j +=  this.getLenOfSubList();
+            } else {
+                subLists.add(list.subList(i, list.size()));
+                i = list.size();
+            }
+        }
+        return subLists;
+    }
+
+    public void sortListByThread (List<Integer> list) throws InterruptedException {
+        Thread t = new Thread(() -> {
+            Collections.sort(list);
+        });
+        t.start();
+        t.join();
+    }
+
+    List<Integer> merge(List<List<Integer>> subLists) {
+        List<Integer> res = new ArrayList<>(subLists.get(0));
         for (int k = 1; k < subLists.size(); k++) {
-            List src = new ArrayList(subLists.get(k));
+            List<Integer> src = new ArrayList<>(subLists.get(k));
             int j = 0;
             while (j < res.size() && src.size() > 0) {
                 if ((int) res.get(j) > (int) src.get(0)) {
@@ -69,5 +73,25 @@ public class TMain {
         }
         return res;
     }
+
+    public static void main(String[] args) throws InterruptedException {
+        TMain m = new TMain();
+
+        List<Integer> source = new ArrayList<>(m.getSourceSize());
+        m.setRandomValues(source);
+        source.forEach(System.out::print);
+        List<List<Integer>> subLists =m.splitList(source,m.getCountOfPartitions());
+
+
+        System.out.println();
+        for (List<Integer> list : subLists) {
+            m.sortListByThread(list);
+        }
+        System.out.println();
+        m.merge(subLists).forEach(System.out::println);
+
+    }
+
+
 }
 

@@ -1,8 +1,8 @@
 import java.util.*;
 
 public class TMain {
-    private final int sourceSize = 11;
-    private final int  countOfPartitions = 5;
+    private final int sourceSize = 1000;
+    private final int  countOfPartitions = 4;
     private final int  lenOfSubList ;
 
     public TMain() {
@@ -80,7 +80,9 @@ public class TMain {
         TMain m = new TMain();
 
         List<Integer> source = m.createAndSetRandValues(m.getSourceSize());
+
         source.forEach(x->System.out.print(" "+x));
+
         List<List<Integer>> subLists =m.splitList(source,m.getCountOfPartitions());
 
         System.out.println();

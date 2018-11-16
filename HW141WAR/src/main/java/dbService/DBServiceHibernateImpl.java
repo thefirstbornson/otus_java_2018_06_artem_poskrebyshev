@@ -13,18 +13,21 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.util.List;
 
-
+@Service
 public class DBServiceHibernateImpl implements DBService {
     private final SessionFactory sessionFactory;
 
     public DBServiceHibernateImpl() {
 
         Configuration configuration = new Configuration()
-                .configure(new File("HW141WAR/src/main/resources/hibernate.cfg.xml"));
+                //.configure(new File("HW141WAR/src/main/resources/hibernate.cfg.xml"));
+                //.configure(new File("hibernate.cfg.xml"));
+                .configure("hibernate.cfg.xml");
 
         configuration.addAnnotatedClass(DataSet.class);
         configuration.addAnnotatedClass(UserDataSet.class);

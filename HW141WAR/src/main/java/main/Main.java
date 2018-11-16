@@ -15,27 +15,27 @@ import servlets.NumberOfUsersServlet;
 import servlets.TemplateProcessor;
 
 public class Main {
-    private final static int PORT = 8080;
-    private final static String PUBLIC_HTML = "HW141WAR/public_html";
-
-    public static void main(String[] args) throws Exception {
-       DBService dbService = new DBServiceHibernateImpl();
-        DBCache dbCache = new DBCacheInMemory(50,500,25);
-
-        ResourceHandler resourceHandler = new ResourceHandler();
-        resourceHandler.setResourceBase(PUBLIC_HTML);
-
-        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        TemplateProcessor templateProcessor = new TemplateProcessor();
-
-        context.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbService)), "/adduser");
-        context.addServlet(new ServletHolder(new GetUserServlet(templateProcessor, dbService, dbCache)), "/getuser");
-        context.addServlet(new ServletHolder(new NumberOfUsersServlet(templateProcessor, dbService)), "/numusers");
-
-        Server server = new Server(PORT);
-        server.setHandler(new HandlerList(resourceHandler, context));
-
-        server.start();
-        server.join();
-    }
+//    private final static int PORT = 8088;
+//    private final static String PUBLIC_HTML = "HW141WAR\\src\\main\\resources\\public_html";
+//
+//    public static void main(String[] args) throws Exception {
+//        DBService dbService = new DBServiceHibernateImpl();
+//        DBCache dbCache = new DBCacheInMemory(50,500,25);
+//
+//        ResourceHandler resourceHandler = new ResourceHandler();
+//        resourceHandler.setResourceBase(PUBLIC_HTML);
+//
+//        ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
+//        TemplateProcessor templateProcessor = new TemplateProcessor();
+//
+//        context.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbService)), "/adduser");
+//        context.addServlet(new ServletHolder(new GetUserServlet(templateProcessor, dbService, dbCache)), "/getuser");
+//        context.addServlet(new ServletHolder(new NumberOfUsersServlet(templateProcessor, dbService)), "/numusers");
+//
+//        Server server = new Server(PORT);
+//        server.setHandler(new HandlerList(resourceHandler, context));
+//
+//        server.start();
+//        server.join();
+//    }
 }

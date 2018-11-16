@@ -1,0 +1,18 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <bean id="addUserServlet" class="servlets.AddUserServlet">
+        <constructor-arg ref="templateProcessor"/>
+        <constructor-arg ref="dbServiceHibernate"/>
+    </bean>
+    <bean id="numberOfUsersServlet" class="servlets.NumberOfUsersServlet">
+        <constructor-arg ref="templateProcessor"/>
+        <constructor-arg ref="dbServiceHibernate"/>
+    </bean>
+    <bean id="templateProcessor" class="servlets.TemplateProcessor"/>
+    <bean id="dbServiceHibernate" class="dbService.DBServiceHibernateImpl"/>
+
+
+</beans>

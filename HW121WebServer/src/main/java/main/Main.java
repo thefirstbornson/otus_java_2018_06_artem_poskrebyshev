@@ -14,7 +14,7 @@ import servlets.NumberOfUsersServlet;
 import servlets.TemplateProcessor;
 
 public class Main {
-    private final static int PORT = 8080;
+    private final static int PORT = 8090;
     private final static String PUBLIC_HTML = "HW121WebServer/public_html";
 
     public static void main(String[] args) throws Exception {

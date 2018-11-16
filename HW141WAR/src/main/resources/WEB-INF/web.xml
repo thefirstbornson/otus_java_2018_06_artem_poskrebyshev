@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<web-app>
+
+    <display-name>HW14.1</display-name>
+    <description>Home work WAR</description>
+
+    <servlet>
+        <servlet-name>AddUserServlet</servlet-name>
+        <servlet-class>servlets.AddUserServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>AddUserServlet</servlet-name>
+        <url-pattern>/adduser</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>NumberOfUsersServlet</servlet-name>
+        <servlet-class>servlets.NumberOfUsersServlet</servlet-class>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>NumberOfUsersServlet</servlet-name>
+        <url-pattern>/numusers</url-pattern>
+    </servlet-mapping>
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+
+</web-app>

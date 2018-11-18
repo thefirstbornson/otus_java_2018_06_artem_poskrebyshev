@@ -4,7 +4,10 @@ import base.DBService;
 import datasets.DataSet;
 import datasets.UserDataSet;
 import dbCache.DBCache;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,14 +20,21 @@ public class GetUserServlet extends HttpServlet {
     private static final String GETUSER_PAGE_TEMPLATE = "getuser.html";
 
 
-    private final TemplateProcessor templateProcessor;
-    private final DBService dbService;
-    private final DBCache dbCache;
+    private TemplateProcessor templateProcessor;
+    private DBService dbService;
+    private DBCache dbCache;
+
+    public GetUserServlet(){}
 
     public GetUserServlet(TemplateProcessor templateProcessor, DBService dbService, DBCache dbCache) {
-        this.templateProcessor = templateProcessor;
-        this.dbService = dbService;
-        this.dbCache = dbCache;
+    }
+
+
+    public void init(ServletConfig config) throws ServletException {
+        ApplicationContext context = new ClassPathXmlApplicationContext("SpringBeans.xml");
+        templateProcessor = (TemplateProcessor) context.getBean("templateProcessor");
+        dbService = (DBService) context.getBean("dbServiceHibernate");
+        dbCache = (DBCache) context.getBean("dBCacheInMemory");
     }
 
     public void doGet(HttpServletRequest request,

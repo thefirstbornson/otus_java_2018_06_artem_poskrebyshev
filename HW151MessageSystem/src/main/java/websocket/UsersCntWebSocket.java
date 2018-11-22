@@ -24,21 +24,21 @@ public class UsersCntWebSocket {
         this.dbService = dbService;
     }
 
-    public void doGet(HttpServletRequest request,
-                      HttpServletResponse response) throws ServletException, IOException {
-        doPost(request, response);
-    }
-
-    public void doPost(HttpServletRequest request,
-                       HttpServletResponse response) throws ServletException, IOException {
-
-        Integer usersNum = dbService.readAll(UserDataSet.class).size();
-        String value = usersNum!=null?usersNum.toString():"not found";
-
-        String page = templateProcessor.getPage(GETUSER_PAGE_TEMPLATE, Map.of("userNum", value));//save to the page
-
-        response.setContentType("text/html;charset=utf-8");
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.getWriter().println(page);
-    }
+//    public void doGet(HttpServletRequest request,
+//                      HttpServletResponse response) throws ServletException, IOException {
+//        doPost(request, response);
+//    }
+//
+//    public void doPost(HttpServletRequest request,
+//                       HttpServletResponse response) throws ServletException, IOException {
+//
+//        Integer usersNum = dbService.readAll(UserDataSet.class).size();
+//        String value = usersNum!=null?usersNum.toString():"not found";
+//
+//        String page = templateProcessor.getPage(GETUSER_PAGE_TEMPLATE, Map.of("userNum", value));//save to the page
+//
+//        response.setContentType("text/html;charset=utf-8");
+//        response.setStatus(HttpServletResponse.SC_OK);
+//        response.getWriter().println(page);
+//    }
 }

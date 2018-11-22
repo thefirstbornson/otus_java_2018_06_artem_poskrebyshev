@@ -27,7 +27,7 @@ public class TemplateProcessor {
         configuration.setDefaultEncoding("UTF-8");
     }
 
-    String getPage(String filename, Map<String, Object> data) throws IOException {
+    public String getPage(String filename, Map<String, Object> data) throws IOException {
         try (Writer stream = new StringWriter()) {
             Template template = configuration.getTemplate(filename);
             template.process(data, stream);

@@ -1,32 +1,27 @@
 package websocket;
 
-import base.DBService;
-import datasets.UserDataSet;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import servlets.TemplateProcessor;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebSocket
 public class UsersCntWebSocket {
+    private Session session;
 
     private static final String GETUSER_PAGE_TEMPLATE = "numusers.html";
 
-    private  TemplateProcessor templateProcessor;
-    private  DBService dbService;
+//    private  TemplateProcessor templateProcessor;
+//    private  DBService dbService;
 
-    public UsersCntWebSocket(TemplateProcessor templateProcessor, DBService dbService) {
-        this.templateProcessor = templateProcessor;
-        this.dbService = dbService;
-    }
-    public UsersCntWebSocket() {
-    }
+//    public UsersCntWebSocket(TemplateProcessor templateProcessor, DBService dbService) {
+//        this.templateProcessor = templateProcessor;
+//        this.dbService = dbService;
+//    }
 
 //    public void doGet(HttpServletRequest request,
 //                      HttpServletResponse response) throws ServletException, IOException {
@@ -46,11 +41,33 @@ public class UsersCntWebSocket {
 //        response.getWriter().println(page);
 //    }
 
+    @OnWebSocketMessage
+    public void onMessage(String data) {
+        System.out.println("server get: " + data);
+        try {
+            Thread.sleep(1000);
+            session.getRemote().sendString("pong");
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("server send: "+"pong");
+
+    }
+
     @OnWebSocketConnect
     public void onConnect(Session session) throws IOException {
         System.out.println(session.getRemoteAddress().getHostString() + " connected!");
+        setSession(session);
 //        this.templateProcessor = templateProcessor;
 //        this.dbService = dbService;
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     @OnWebSocketClose

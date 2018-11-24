@@ -25,12 +25,12 @@ public class Main {
         DBCache dbCache = new DBCacheInMemory(50, 500, 25);
 
         ResourceHandler resourceHandler = new ResourceHandler();
+//        resourceHandler.setResourceBase(PUBLIC_HTML);
         Resource resource = Resource.newClassPathResource(PUBLIC_HTML);
         resourceHandler.setBaseResource(resource);
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         TemplateProcessor templateProcessor = new TemplateProcessor();
-
         context.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbService)), "/adduser");
         context.addServlet(new ServletHolder(new GetUserServlet(templateProcessor, dbService, dbCache)), "/getuser");
 //        context.addServlet(new ServletHolder(new NumberOfUsersServlet(templateProcessor, dbService)), "/numusers");

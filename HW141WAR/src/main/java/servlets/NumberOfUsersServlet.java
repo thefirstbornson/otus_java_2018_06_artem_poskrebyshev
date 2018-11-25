@@ -1,10 +1,9 @@
 package servlets;
 
 import base.DBService;
-import datasets.DataSet;
 import datasets.UserDataSet;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -12,7 +11,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 public class NumberOfUsersServlet extends HttpServlet {
@@ -27,7 +25,7 @@ public class NumberOfUsersServlet extends HttpServlet {
     }
 
     public void init(ServletConfig config) throws ServletException {
-        ApplicationContext context = new ClassPathXmlApplicationContext("SpringBeans.xml");
+        WebApplicationContext context = WebApplicationContextUtils.getWebApplicationContext(config.getServletContext());
         templateProcessor = (TemplateProcessor) context.getBean("templateProcessor");
         dbService = (DBService) context.getBean("dbServiceHibernate");
     }

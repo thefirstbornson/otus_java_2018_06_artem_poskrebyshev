@@ -3,26 +3,11 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="addUserServlet" class="servlets.AddUserServlet">
-        <constructor-arg ref="templateProcessor"/>
-        <constructor-arg ref="dbServiceHibernate"/>
-    </bean>
-
-    <bean id="numberOfUsersServlet" class="servlets.NumberOfUsersServlet">
-        <constructor-arg ref="templateProcessor"/>
-        <constructor-arg ref="dbServiceHibernate"/>
-    </bean>
 
     <bean id="dBCacheInMemory" class="dbCache.DBCacheInMemory">
         <constructor-arg name="TimeToLive" type="long" value="50"/>
         <constructor-arg name="TimerInterval" type="long" value="500"/>
         <constructor-arg name="maxItems" type="int" value="25"/>
-    </bean>
-
-    <bean id="getUserServlet" class="servlets.GetUserServlet">
-        <constructor-arg ref="templateProcessor"/>
-        <constructor-arg ref="dbServiceHibernate"/>
-        <constructor-arg ref="dBCacheInMemory"/>
     </bean>
 
     <bean id="templateProcessor" class="servlets.TemplateProcessor"/>

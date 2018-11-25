@@ -5,6 +5,16 @@
     <display-name>HW14.1</display-name>
     <description>Home work WAR</description>
 
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/classes/SpringBeans.xml</param-value>
+    </context-param>
+
+
     <servlet>
         <servlet-name>AddUserServlet</servlet-name>
         <servlet-class>servlets.AddUserServlet</servlet-class>

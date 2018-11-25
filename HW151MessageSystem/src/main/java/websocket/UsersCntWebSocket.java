@@ -5,24 +5,21 @@ import datasets.UserDataSet;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
+import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import servlets.TemplateProcessor;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @WebSocket
 public class UsersCntWebSocket {
 
     private static final String GETUSER_PAGE_TEMPLATE = "numusers.html";
-
+    private Session session;
     private  TemplateProcessor templateProcessor;
     private  DBService dbService;
 
-    public UsersCntWebSocket(TemplateProcessor templateProcessor, DBService dbService) {
-        this.templateProcessor = templateProcessor;
+    public UsersCntWebSocket( DBService dbService) {
         this.dbService = dbService;
     }
     public UsersCntWebSocket() {
@@ -46,11 +43,32 @@ public class UsersCntWebSocket {
 //        response.getWriter().println(page);
 //    }
 
+    @OnWebSocketMessage
+    public void onMessage(String data) {
+        System.out.println("server get: " + data);
+        Integer usersNum = dbService.readAll(UserDataSet.class).size();
+        String value = usersNum!=null?usersNum.toString():"not found";
+
+        try {
+             session.getRemote().sendString(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("server send: "+value);
+    }
+
     @OnWebSocketConnect
     public void onConnect(Session session) throws IOException {
         System.out.println(session.getRemoteAddress().getHostString() + " connected!");
-//        this.templateProcessor = templateProcessor;
-//        this.dbService = dbService;
+        setSession(session);
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 
     @OnWebSocketClose

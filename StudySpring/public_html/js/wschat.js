@@ -3,7 +3,6 @@ var ws;
 init = function () {
     ws = new WebSocket("ws://192.168.195.249:8090/chat");
     ws.onopen = function (event) {
-
     }
     ws.onmessage = function (event) {
         var textarea = document.getElementById("messages");

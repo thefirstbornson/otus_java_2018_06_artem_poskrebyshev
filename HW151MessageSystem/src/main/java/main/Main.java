@@ -1,7 +1,6 @@
 package main;
 
 import base.DBService;
-import datasets.UserDataSet;
 import dbCache.DBCache;
 import dbCache.DBCacheInMemory;
 import dbService.DBServiceHibernateImpl;
@@ -34,10 +33,10 @@ public class Main {
         context.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbService)), "/adduser");
         context.addServlet(new ServletHolder(new GetUserServlet(templateProcessor, dbService, dbCache)), "/getuser");
 //        context.addServlet(new ServletHolder(new NumberOfUsersServlet(templateProcessor, dbService)), "/numusers");
-//        context.addServlet(new ServletHolder(new UsersCntWebSocketServlet(templateProcessor, dbService)), "/numusers");
+        context.addServlet(new ServletHolder(new UsersCntWebSocketServlet(dbService)), "/cntusrs");
         context.setAttribute("dbservice",dbService);
         context.setAttribute("templateProcessor",templateProcessor);
-        context.addServlet( UsersCntWebSocketServlet.class, "/numusers");
+//        context.addServlet( UsersCntWebSocketServlet.class, "/cntusrs");
 
         Server server = new Server(PORT);
         server.setHandler(new HandlerList(resourceHandler, context));

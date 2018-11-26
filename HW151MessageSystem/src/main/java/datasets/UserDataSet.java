@@ -41,6 +41,13 @@ public class UserDataSet extends DataSet {
         this.age = age;
     }
 
+    public UserDataSet(String name, int age, List<PhoneDataSet> phones, AddressDataSet address) {
+        this.name = name;
+        this.age = age;
+        this.phones = phones;
+        this.address = address;
+    }
+
     public void setId(long id){
         this.id=id;
     }
@@ -53,23 +60,15 @@ public class UserDataSet extends DataSet {
     public void setAge(String age) {
         setAge(Integer.parseInt(age));
     }
-
     public void setAddress(AddressDataSet address) {
         this.address = address;
     }
-
     public void setAddress(String address) {
         this.address=new AddressDataSet(address, this);
     }
-
-    public long getId() {
-        return id;
-    }
-
     public void setPhones(List<PhoneDataSet> phones) {
         this.phones = phones;
     }
-
     public void setPhones(String phones) {
         List<PhoneDataSet> listPhone = new ArrayList<>();
         for (String s : phones.split(",")) {
@@ -78,12 +77,22 @@ public class UserDataSet extends DataSet {
         setPhones(listPhone);
     }
 
+    public long getId() {
+        return id;
+    }
     public String getName() {
         return name;
     }
-
     public int getAge() {
         return age;
+    }
+
+    public List<PhoneDataSet> getPhones() {
+        return phones;
+    }
+
+    public AddressDataSet getAddress() {
+        return address;
     }
 
     public String toString() {

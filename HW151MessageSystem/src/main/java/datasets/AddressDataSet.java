@@ -19,12 +19,12 @@ import javax.persistence.*;
     public AddressDataSet(){
     }
 
-        public AddressDataSet(String street, UserDataSet userDataSet) {
+    public AddressDataSet(String street, UserDataSet userDataSet) {
             this.street = street;
             this.userDataSet = userDataSet;
         }
 
-        public String getStreet() {
+    public String getStreet() {
         return street;
     }
 

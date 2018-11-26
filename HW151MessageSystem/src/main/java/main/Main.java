@@ -13,6 +13,7 @@ import org.eclipse.jetty.util.resource.Resource;
 import servlets.AddUserServlet;
 import servlets.GetUserServlet;
 import servlets.TemplateProcessor;
+import websocket.AddUserWebSocketServlet;
 import websocket.UsersCntWebSocketServlet;
 
 public class Main {
@@ -30,12 +31,13 @@ public class Main {
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         TemplateProcessor templateProcessor = new TemplateProcessor();
-        context.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbService)), "/adduser");
+//      context.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbService)), "/adduser");
+        context.addServlet(new ServletHolder(new AddUserWebSocketServlet(dbService)), "/adduser");
         context.addServlet(new ServletHolder(new GetUserServlet(templateProcessor, dbService, dbCache)), "/getuser");
 //        context.addServlet(new ServletHolder(new NumberOfUsersServlet(templateProcessor, dbService)), "/numusers");
         context.addServlet(new ServletHolder(new UsersCntWebSocketServlet(dbService)), "/cntusrs");
-        context.setAttribute("dbservice",dbService);
-        context.setAttribute("templateProcessor",templateProcessor);
+//        context.setAttribute("dbservice",dbService);
+//        context.setAttribute("templateProcessor",templateProcessor);
 //        context.addServlet( UsersCntWebSocketServlet.class, "/cntusrs");
 
         Server server = new Server(PORT);

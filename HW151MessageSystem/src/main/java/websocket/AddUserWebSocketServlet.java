@@ -3,20 +3,21 @@ package websocket;
 import base.DBService;
 import org.eclipse.jetty.websocket.servlet.*;
 
-public class UsersCntWebSocketServlet extends WebSocketServlet {
+public class AddUserWebSocketServlet  extends WebSocketServlet {
     DBService dbService;
 
-    public UsersCntWebSocketServlet(DBService dbService) {
+    public AddUserWebSocketServlet(DBService dbService) {
         this.dbService = dbService;
     }
 
     @Override
     public void configure(WebSocketServletFactory factory) {
-        factory.getPolicy().setIdleTimeout(10000);
+        factory.getPolicy().setIdleTimeout(60_000_000);
         factory.setCreator(new WebSocketCreator() {
             @Override
             public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
-                return new UsersCntWebSocket (dbService);
+                System.out.println(req.getParameterMap().toString());
+                return new AddUserWebSocket (dbService);
             }
         });
     }

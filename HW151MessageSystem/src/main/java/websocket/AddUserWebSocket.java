@@ -2,9 +2,10 @@ package websocket;
 
 import base.DBService;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import datasets.UserDataSet;
-import dbCache.DBCache;
+import gsonconverters.UserDataSetConverter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -26,21 +27,22 @@ public class AddUserWebSocket {
     @OnWebSocketMessage
     public void onMessage(String data) {
         System.out.println("server get: " + data);
-        Gson gson = new Gson();
-        try {
-            UserDataSet userDataSet = gson.fromJson(data, UserDataSet.class);
-        } catch (JsonSyntaxException e) {
-            e.printStackTrace();
-        }
-        Integer usersNum = dbService.readAll(UserDataSet.class).size();
-        String value = usersNum!=null?usersNum.toString():"not found";
+
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
+        Gson gson = builder.create();
 
         try {
+            UserDataSet user = gson.fromJson(data, UserDataSet.class);
+            dbService.save(user);
+//            String value = user!=null?user.toString():"not found";
+            String value = user!=null?gson.toJson(user):"not found";
             session.getRemote().sendString(value);
-        } catch (IOException e) {
+            System.out.println("server send: "+value);
+        } catch (IOException | JsonSyntaxException e) {
             e.printStackTrace();
         }
-        System.out.println("server send: "+value);
+
     }
 
     @OnWebSocketConnect

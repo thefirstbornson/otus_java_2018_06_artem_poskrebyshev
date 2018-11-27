@@ -14,8 +14,6 @@ import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
-import java.io.File;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 
@@ -49,7 +47,6 @@ public class DBServiceHibernateImpl implements DBService {
             DAO dao = DaoFactory.getDataSetDAO(user.getClass(), session);
             dao.save(user);
             transaction.commit();
-
         }
     }
 

@@ -86,11 +86,9 @@ public class UserDataSet extends DataSet {
     public int getAge() {
         return age;
     }
-
     public List<PhoneDataSet> getPhones() {
         return phones;
     }
-
     public AddressDataSet getAddress() {
         return address;
     }

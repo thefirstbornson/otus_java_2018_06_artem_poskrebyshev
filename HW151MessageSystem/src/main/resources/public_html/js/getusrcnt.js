@@ -5,7 +5,7 @@ init = function () {
 
 
     ws.onopen = function (event) {
-        //sendMessage();
+
         ws.send("0");
     }
     ws.onmessage = function (event) {

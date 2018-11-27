@@ -3,7 +3,7 @@ var host = window.location.host;
 
 
 init = function () {
-    ws = new WebSocket("ws://"+host+"/adduser");
+    ws = new WebSocket("ws://"+host+"/getuser");
     ws.onopen = function (event) {
     }
     ws.onmessage = function (event) {
@@ -17,7 +17,7 @@ init = function () {
 
 function fieldsToJson(){
         var obj = {};
-        var form = document.getElementById( "adduserform" );
+        var form = document.getElementById( "getuserform" );
 		var elements = form.querySelectorAll( "input" );
 		for( var i = 0; i < elements.length; ++i ) {
 			var element = elements[i];
@@ -33,7 +33,7 @@ function fieldsToJson(){
 
 function sendMessage() {
     if(ws.readyState === ws.CLOSED){
-        ws = new WebSocket("ws://"+host+"/adduser");
+        ws = new WebSocket("ws://"+host+"/getuser");
     }
     var json = fieldsToJson();
     ws.send(json);

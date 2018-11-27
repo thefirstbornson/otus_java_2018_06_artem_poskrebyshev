@@ -53,7 +53,7 @@ public class GetUserWebSocket {
                         if (user!=null) dbCache.put(id, user);
                     }
                 }
-                value = user!=null?gson.toJson(user):"not found";
+                value = user!=null?gson.toJson(user):gson.toJson("not found");
                 session.getRemote().sendString(value);
                 System.out.println("server send: "+value);
                 value = user.toString();

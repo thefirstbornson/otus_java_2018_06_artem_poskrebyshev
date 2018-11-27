@@ -7,10 +7,7 @@ import datasets.AddressDataSet;
 import datasets.DataSet;
 import datasets.PhoneDataSet;
 import datasets.UserDataSet;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
-import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
+import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
@@ -56,6 +53,8 @@ public class DBServiceHibernateImpl implements DBService {
         try (Session session = sessionFactory.openSession()) {
             DAO dao = DaoFactory.getDataSetDAO(clazz, session);
             return (T) Hibernate.unproxy(dao.load(id, clazz));
+        } catch (ObjectNotFoundException e){
+            return null;
         }
     }
 

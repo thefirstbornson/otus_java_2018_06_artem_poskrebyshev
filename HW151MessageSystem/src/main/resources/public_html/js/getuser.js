@@ -9,7 +9,8 @@ init = function () {
     ws.onmessage = function (event) {
         var user =  event.data;
         user = JSON.parse(user);
-        output.innerHTML = user;
+        output.innerHTML = user.id + " " + user.name
+            + " " + user.phones + " " + user.address;
     }
     ws.onclose = function (event) {
     }

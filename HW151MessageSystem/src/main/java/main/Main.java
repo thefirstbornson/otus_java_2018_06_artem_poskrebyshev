@@ -14,6 +14,7 @@ import servlets.AddUserServlet;
 import servlets.GetUserServlet;
 import servlets.TemplateProcessor;
 import websocket.AddUserWebSocketServlet;
+import websocket.GetUserWebSocketServlet;
 import websocket.UsersCntWebSocketServlet;
 
 public class Main {
@@ -33,7 +34,7 @@ public class Main {
         TemplateProcessor templateProcessor = new TemplateProcessor();
 //      context.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbService)), "/adduser");
         context.addServlet(new ServletHolder(new AddUserWebSocketServlet(dbService)), "/adduser");
-        context.addServlet(new ServletHolder(new GetUserServlet(templateProcessor, dbService, dbCache)), "/getuser");
+        context.addServlet(new ServletHolder(new GetUserWebSocketServlet(dbService, dbCache)), "/getuser");
 //        context.addServlet(new ServletHolder(new NumberOfUsersServlet(templateProcessor, dbService)), "/numusers");
         context.addServlet(new ServletHolder(new UsersCntWebSocketServlet(dbService)), "/cntusrs");
 //        context.setAttribute("dbservice",dbService);

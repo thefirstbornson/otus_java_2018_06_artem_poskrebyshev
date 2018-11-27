@@ -14,13 +14,13 @@ import java.io.IOException;
 @WebSocket
 public class UsersCntWebSocket {
 
-    private static final String GETUSER_PAGE_TEMPLATE = "numusers.html";
     private Session session;
     private  DBService dbService;
 
     public UsersCntWebSocket( DBService dbService) {
         this.dbService = dbService;
     }
+
     public UsersCntWebSocket() {
     }
 

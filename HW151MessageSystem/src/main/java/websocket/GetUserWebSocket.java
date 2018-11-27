@@ -3,8 +3,11 @@ package websocket;
 import base.DBService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonSyntaxException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import datasets.DataSet;
 import datasets.UserDataSet;
+import dbCache.DBCache;
 import gsonconverters.UserDataSetConverter;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -15,33 +18,51 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import java.io.IOException;
 
 @WebSocket
-public class AddUserWebSocket {
+public class GetUserWebSocket {
     private Session session;
-    DBService dbService;
+    private DBService dbService;
+    private DBCache dbCache;
 
-    public AddUserWebSocket(DBService dbService) {
+    public GetUserWebSocket(DBService dbService, DBCache dbCache) {
         this.dbService = dbService;
+        this.dbCache = dbCache;
     }
 
+    public GetUserWebSocket() {
+    }
 
     @OnWebSocketMessage
     public void onMessage(String data) {
+        String value="";
         System.out.println("server get: " + data);
+
+        JsonObject jsonObject = new JsonParser().parse(data).getAsJsonObject();
+        value = jsonObject.get("id").getAsString();
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
         Gson gson = builder.create();
 
-        try {
-            UserDataSet user = gson.fromJson(data, UserDataSet.class);
-            dbService.save(user);
-            String value = user!=null?gson.toJson(user):"not found";
-            session.getRemote().sendString(value);
-            System.out.println("server send: "+value);
-        } catch (IOException | JsonSyntaxException e) {
-            e.printStackTrace();
-        }
+            DataSet user = new UserDataSet();
+            try {
+                int id = data != null ? Integer.parseInt(value) : 0;
+                if (id > 0) {
+                    user = dbCache.get(id);
+                    if (user==null) {
+                        user = dbService.load(id, UserDataSet.class);
+                        if (user!=null) dbCache.put(id, user);
+                    }
+                }
+                value = user!=null?gson.toJson(user):"not found";
+                session.getRemote().sendString(value);
+                System.out.println("server send: "+value);
+                value = user.toString();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
 
+        System.out.println("server send: "+value);
     }
 
     @OnWebSocketConnect

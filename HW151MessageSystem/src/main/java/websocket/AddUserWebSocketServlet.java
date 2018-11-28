@@ -1,6 +1,6 @@
 package websocket;
 
-import base.DBService;
+import dbService.DBService;
 import org.eclipse.jetty.websocket.servlet.*;
 
 public class AddUserWebSocketServlet  extends WebSocketServlet {

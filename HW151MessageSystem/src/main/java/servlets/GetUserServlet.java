@@ -1,6 +1,6 @@
 package servlets;
 
-import base.DBService;
+import dbService.DBService;
 import datasets.DataSet;
 import datasets.UserDataSet;
 import dbCache.DBCache;

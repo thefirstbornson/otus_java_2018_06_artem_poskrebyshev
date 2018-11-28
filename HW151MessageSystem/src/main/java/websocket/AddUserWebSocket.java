@@ -1,6 +1,6 @@
 package websocket;
 
-import base.DBService;
+import dbService.DBService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
@@ -31,7 +31,6 @@ public class AddUserWebSocket {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
         Gson gson = builder.create();
-
         try {
             UserDataSet user = gson.fromJson(data, UserDataSet.class);
             dbService.save(user);

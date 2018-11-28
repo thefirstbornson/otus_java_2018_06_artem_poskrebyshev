@@ -1,6 +1,6 @@
 package websocket;
 
-import base.DBService;
+import dbService.DBService;
 import dbCache.DBCache;
 import org.eclipse.jetty.websocket.servlet.*;
 

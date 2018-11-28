@@ -1,6 +1,6 @@
 package main;
 
-import base.DBService;
+import dbService.DBService;
 import dbCache.DBCache;
 import dbCache.DBCacheInMemory;
 import dbService.DBServiceHibernateImpl;
@@ -10,8 +10,6 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
-import servlets.AddUserServlet;
-import servlets.GetUserServlet;
 import servlets.TemplateProcessor;
 import websocket.AddUserWebSocketServlet;
 import websocket.GetUserWebSocketServlet;

@@ -1,8 +1,8 @@
 package main;
 
 //import base.DBService;
-//import dbCache.DBCache;
-//import dbCache.DBCacheInMemory;
+//import dbService.dbCache.DBCache;
+//import dbService.dbCache.DBCacheInMemory;
 //import dbService.DBServiceHibernateImpl;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
@@ -18,7 +18,7 @@ public class Main {
 
     public static void main(String[] args) throws Exception {
 //        DBService dbService = new DBServiceHibernateImpl();
-//        DBCache dbCache = new DBCacheInMemory(50, 500, 25);
+//        DBCache dbService.dbCache = new DBCacheInMemory(50, 500, 25);
 
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(PUBLIC_HTML);
@@ -28,7 +28,7 @@ public class Main {
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
         TemplateProcessor templateProcessor = new TemplateProcessor();
 //        context.addServlet(new ServletHolder(new AddUserServlet(templateProcessor, dbService)), "/adduser");
-//        context.addServlet(new ServletHolder(new GetUserServlet(templateProcessor, dbService, dbCache)), "/getuser");
+//        context.addServlet(new ServletHolder(new GetUserServlet(templateProcessor, dbService, dbService.dbCache)), "/getuser");
 ////        context.addServlet(new ServletHolder(new NumberOfUsersServlet(templateProcessor, dbService)), "/numusers");
 ////        context.addServlet(new ServletHolder(new UsersCntWebSocketServlet(templateProcessor, dbService)), "/numusers");
 //        context.setAttribute("dbservice",dbService);

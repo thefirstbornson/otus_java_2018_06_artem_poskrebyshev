@@ -3,7 +3,7 @@ package servlets;
 import base.DBService;
 import datasets.DataSet;
 import datasets.UserDataSet;
-import dbCache.DBCache;
+import dbService.dbCache.DBCache;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 

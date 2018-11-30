@@ -1,10 +1,8 @@
 package messagesystem.message.messageimpl;
 
 import datasets.DataSet;
-import datasets.UserDataSet;
 import messagesystem.Address;
 import messagesystem.message.MsgToFrontend;
-import org.eclipse.jetty.server.Authentication;
 import websocket.FrontendService;
 
 public class MsgGetUserIdAnswer extends MsgToFrontend {
@@ -18,6 +16,7 @@ public class MsgGetUserIdAnswer extends MsgToFrontend {
 
     @Override
     public void exec(FrontendService frontendService) {
-        frontendService.sendMessage(user);
+        frontendService.sendResult(user);
+        System.out.println("server send from MS: " + user.toString());
     }
 }

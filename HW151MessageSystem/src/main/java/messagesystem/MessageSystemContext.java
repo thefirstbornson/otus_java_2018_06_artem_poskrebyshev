@@ -1,32 +1,28 @@
-package messagesystem.message;
+package messagesystem;
 
-import messagesystem.Address;
-import messagesystem.MessageSystem;
-
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * Created by tully.
+ */
 public class MessageSystemContext {
     private final MessageSystem messageSystem;
 
+    private Address frontAddress;
     private Address dbAddress;
-    private Map<String, Address> frontAddressMap;
 
     public MessageSystemContext(MessageSystem messageSystem) {
         this.messageSystem = messageSystem;
-        this.frontAddressMap = new HashMap<>();
     }
 
     public MessageSystem getMessageSystem() {
         return messageSystem;
     }
 
-    public Address getFrontAddress(String id) {
-        return frontAddressMap.get(id);
+    public Address getFrontAddress() {
+        return frontAddress;
     }
 
     public void setFrontAddress(Address frontAddress) {
-        this.frontAddressMap.put(frontAddress.getId(),frontAddress);
+        this.frontAddress = frontAddress;
     }
 
     public Address getDbAddress() {

@@ -4,7 +4,7 @@
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
 
-    <bean id="dBCacheInMemory" class="dbCache.DBCacheInMemory">
+    <bean id="dBCacheInMemory" class="dbService.DBCacheInMemory">
         <constructor-arg name="TimeToLive" type="long" value="50"/>
         <constructor-arg name="TimerInterval" type="long" value="500"/>
         <constructor-arg name="maxItems" type="int" value="25"/>

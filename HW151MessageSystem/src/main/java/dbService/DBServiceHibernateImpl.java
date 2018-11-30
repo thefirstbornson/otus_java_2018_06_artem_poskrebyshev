@@ -21,10 +21,12 @@ public class DBServiceHibernateImpl implements DBService {
     private final SessionFactory sessionFactory;
     private final Address address;
     private final MessageSystemContext context;
+    private final DBCache dbCache;
 
-    public DBServiceHibernateImpl(MessageSystemContext context, Address address) {
+    public DBServiceHibernateImpl(MessageSystemContext context, Address address, DBCache dbCache) {
         this.context = context;
         this.address = address;
+        this.dbCache = dbCache;
         Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
 
         configuration.addAnnotatedClass(DataSet.class);
@@ -62,7 +64,12 @@ public class DBServiceHibernateImpl implements DBService {
     public <T extends DataSet> T load(long id, Class<T> clazz) {
         try (Session session = sessionFactory.openSession()) {
             DAO dao = DaoFactory.getDataSetDAO(clazz, session);
-            return (T) Hibernate.unproxy(dao.load(id, clazz));
+            T dataset = dbCache.get(id);
+            if (dataset==null) {
+                dataset = (T) Hibernate.unproxy(dao.load(id, clazz));
+                if (dataset!=null) dbCache.put(id, dataset);
+            }
+            return dataset;
         } catch (ObjectNotFoundException e){
             return null;
         }

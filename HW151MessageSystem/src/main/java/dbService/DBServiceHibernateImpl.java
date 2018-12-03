@@ -90,11 +90,11 @@ public class DBServiceHibernateImpl implements DBService {
 
     @Override
     public Address getAddress() {
-        return null;
+        return address;
     }
 
     @Override
     public MessageSystem getMS() {
-        return null;
+        return context.getMessageSystem();
     }
 }

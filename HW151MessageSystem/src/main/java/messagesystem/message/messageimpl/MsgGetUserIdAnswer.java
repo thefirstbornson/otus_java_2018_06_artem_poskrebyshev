@@ -11,11 +11,11 @@ public class MsgGetUserIdAnswer extends MsgToFrontend {
     public MsgGetUserIdAnswer(Address from, Address to, DataSet user) {
         super(from, to);
         this.user = user;
-
     }
 
     @Override
     public void exec(FrontendService frontendService) {
+        System.out.println("MsgGetUserIdAnswer executed");
         frontendService.sendResult(user);
         System.out.println("server send from MS: " + user.toString());
     }

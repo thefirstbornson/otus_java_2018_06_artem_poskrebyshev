@@ -38,6 +38,7 @@ public class Main {
 
         DBCache dbCache = new DBCacheInMemory(50, 500, 25);
         DBService dbService = new DBServiceHibernateImpl(mscontext,dbAddress,dbCache);
+        dbService.init();
 
         ResourceHandler resourceHandler = new ResourceHandler();
         Resource resource = Resource.newClassPathResource(PUBLIC_HTML);
@@ -47,7 +48,7 @@ public class Main {
         servletContextHandler.addServlet(new ServletHolder(new AddUserWebSocketServlet(dbService)), "/adduser");
         servletContextHandler.addServlet(new ServletHolder(new GetUserWebSocketServlet(mscontext, getUserFrontend)), "/getuser");
         servletContextHandler.addServlet(new ServletHolder(new UsersCntWebSocketServlet(dbService)), "/cntusrs");
-       // messageSystem.start();
+        messageSystem.start();
 
 
         Server server = new Server(PORT);

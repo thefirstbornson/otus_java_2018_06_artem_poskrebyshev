@@ -15,7 +15,7 @@ public class GetUserWebSocketServlet extends WebSocketServlet {
 
     @Override
     public void configure(WebSocketServletFactory factory) {
-        factory.getPolicy().setIdleTimeout(10000);
+        factory.getPolicy().setIdleTimeout(100_000_000);
         factory.setCreator((req, resp) -> new GetUserWebSocket( mscontext, address));
     }
 }

@@ -27,12 +27,12 @@ public class Main {
 
         Address addUserFrontend = new Address("AddUserFrontend");
         Address getUserFrontend = new Address("GetUserFrontend");
-        Address usersCountFrontendsers  = new Address( "UsersCountFrontend");
+        Address usersCountFrontend  = new Address( "UsersCountFrontend");
         Address dbAddress = new Address("DB");
 
         mscontext.setFrontAddress(getUserFrontend);
         mscontext.setFrontAddress(addUserFrontend);
-        mscontext.setFrontAddress(usersCountFrontendsers);
+        mscontext.setFrontAddress(usersCountFrontend);
         mscontext.setDbAddress(dbAddress);
 
         DBCache dbCache = new DBCacheInMemory(50, 500, 25);
@@ -46,7 +46,7 @@ public class Main {
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
         servletContextHandler.addServlet(new ServletHolder(new AddUserWebSocketServlet(mscontext, addUserFrontend)), "/adduser");
         servletContextHandler.addServlet(new ServletHolder(new GetUserWebSocketServlet(mscontext, getUserFrontend)), "/getuser");
-        servletContextHandler.addServlet(new ServletHolder(new UsersCntWebSocketServlet(dbService)), "/cntusrs");
+        servletContextHandler.addServlet(new ServletHolder(new UsersCntWebSocketServlet(mscontext, usersCountFrontend)), "/cntusrs");
         messageSystem.start();
 
 

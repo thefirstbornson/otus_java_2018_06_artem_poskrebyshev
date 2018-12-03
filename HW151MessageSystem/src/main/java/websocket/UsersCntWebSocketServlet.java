@@ -1,23 +1,22 @@
 package websocket;
 
-import dbService.DBService;
-import org.eclipse.jetty.websocket.servlet.*;
+import messagesystem.Address;
+import messagesystem.MessageSystemContext;
+import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 public class UsersCntWebSocketServlet extends WebSocketServlet {
-    DBService dbService;
+    private Address address;
+    private MessageSystemContext mscontext;
 
-    public UsersCntWebSocketServlet(DBService dbService) {
-        this.dbService = dbService;
+    public UsersCntWebSocketServlet(MessageSystemContext mscontext, Address address) {
+        this.mscontext = mscontext;
+        this.address = address;
     }
 
     @Override
     public void configure(WebSocketServletFactory factory) {
-        factory.getPolicy().setIdleTimeout(10000);
-        factory.setCreator(new WebSocketCreator() {
-            @Override
-            public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
-                return new UsersCntWebSocket (dbService);
-            }
-        });
+        factory.getPolicy().setIdleTimeout(100_000_000);
+        factory.setCreator((req, resp) -> new UsersCntWebSocket( mscontext, address));
     }
 }

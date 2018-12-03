@@ -87,11 +87,6 @@ public class GetUserWebSocket implements FrontendService {
         this.session = session;
     }
 
-    public <T> void sendMessage(T user) {
-
-    }
-
-
     public Address getAddress() {
         return address;
     }

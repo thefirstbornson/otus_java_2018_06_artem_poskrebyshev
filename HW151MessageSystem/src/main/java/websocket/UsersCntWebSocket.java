@@ -1,7 +1,14 @@
 package websocket;
 
-import dbService.DBService;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import datasets.UserDataSet;
+import gsonconverters.UserDataSetConverter;
+import messagesystem.Address;
+import messagesystem.MessageSystem;
+import messagesystem.MessageSystemContext;
+import messagesystem.message.Message;
+import messagesystem.message.messageimpl.MsgUserCount;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -11,26 +18,40 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import java.io.IOException;
 
 @WebSocket
-public class UsersCntWebSocket {
-
+public class UsersCntWebSocket implements FrontendService {
     private Session session;
-    private  DBService dbService;
+    private Address address;
+    private MessageSystemContext context;
 
-    public UsersCntWebSocket( DBService dbService) {
-        this.dbService = dbService;
+    public UsersCntWebSocket(MessageSystemContext context, Address address) {
+        this.context = context;
+        this.address = address;
+        init();
     }
-
     public UsersCntWebSocket() {
     }
 
     @OnWebSocketMessage
-    public void onMessage(String data) {
-        System.out.println("server get: " + data);
-        Integer usersNum = dbService.readAll(UserDataSet.class).size();
-        String value = usersNum!=null?usersNum.toString():"not found";
+    public void handleRequest(String data) {
 
+        System.out.println("server get: " + data);
+
+
+        Message message = new MsgUserCount(getAddress(), context.getDbAddress());
+        context.getMessageSystem().sendMessage(message);
+
+        System.out.println("server send to MS: " + data);
+    }
+
+    @Override
+    public <T> void sendResult(T count) {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
+        Gson gson = builder.create();
+
+        String value = count!=null?gson.toJson(count):gson.toJson("not found");
         try {
-             session.getRemote().sendString(value);
+            session.getRemote().sendString(value);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -55,5 +76,21 @@ public class UsersCntWebSocket {
     public void onClose(Session session, int status, String reason) {
         System.out.println(session.getRemoteAddress().getHostString() + " closed!");
     }
+
+    @Override
+    public void init() {
+        context.getMessageSystem().addAddressee(this);
+        context.getMessageSystem().addWorker(this);
+    }
+
+    @Override
+    public Address getAddress() {
+        return address;
+    }
+
+    public MessageSystem getMS() {
+        return context.getMessageSystem();
+    }
+
 
 }

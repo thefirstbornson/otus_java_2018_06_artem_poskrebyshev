@@ -6,6 +6,9 @@ import datasets.AddressDataSet;
 import datasets.DataSet;
 import datasets.PhoneDataSet;
 import datasets.UserDataSet;
+import messagesystem.Address;
+import messagesystem.MessageSystem;
+import messagesystem.message.MessageSystemContext;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -16,9 +19,13 @@ import java.util.List;
 
 public class DBServiceHibernateImpl implements DBService {
     private final SessionFactory sessionFactory;
+    private final Address address;
+    private final MessageSystemContext context;
     private final DBCache dbCache;
 
-    public DBServiceHibernateImpl( DBCache dbCache) {
+    public DBServiceHibernateImpl(MessageSystemContext context, Address address, DBCache dbCache) {
+        this.context = context;
+        this.address = address;
         this.dbCache = dbCache;
         Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
 
@@ -37,6 +44,10 @@ public class DBServiceHibernateImpl implements DBService {
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
+    @Override
+    public void init() {
+        context.getMessageSystem().addAddressee(this);
+    }
 
     @Override
     public <T extends DataSet> void save(T user) {
@@ -75,5 +86,15 @@ public class DBServiceHibernateImpl implements DBService {
     @Override
     public void close() throws Exception {
         sessionFactory.close();
+    }
+
+    @Override
+    public Address getAddress() {
+        return address;
+    }
+
+    @Override
+    public MessageSystem getMS() {
+        return context.getMessageSystem();
     }
 }

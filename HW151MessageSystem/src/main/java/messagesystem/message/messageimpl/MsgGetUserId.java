@@ -31,4 +31,6 @@ public class MsgGetUserId extends MsgToDB {
         System.out.println("MsgGetUserId - Sending MsgGetUserIdAnswer to queue");
         dbService.getMS().sendMessage(new MsgGetUserIdAnswer(getTo(), getFrom(), user));
     }
+
+
 }

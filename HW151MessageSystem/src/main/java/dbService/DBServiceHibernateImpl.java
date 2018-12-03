@@ -8,8 +8,8 @@ import datasets.PhoneDataSet;
 import datasets.UserDataSet;
 import messagesystem.Address;
 import messagesystem.MessageSystem;
+import messagesystem.MessageSystemContext;
 import messagesystem.message.Message;
-import messagesystem.message.MessageSystemContext;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -46,10 +46,9 @@ public class DBServiceHibernateImpl implements DBService {
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
-    @Override
+
     public void init() {
         context.getMessageSystem().addAddressee(this);
-
         Thread thread = new Thread(() -> {
             LinkedBlockingQueue<Message> queue = context.getMessageSystem().getMessagesMap().get(this.getAddress());
             while (true) {

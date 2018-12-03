@@ -1,7 +1,7 @@
 package messagesystem.message;
 
 import messagesystem.Address;
-import messagesystem.adressees.Addressee;
+import messagesystem.Addressee;
 
 /**
  * @author tully

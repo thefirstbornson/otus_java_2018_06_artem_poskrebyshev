@@ -8,8 +8,8 @@ import datasets.UserDataSet;
 import gsonconverters.UserDataSetConverter;
 import messagesystem.Address;
 import messagesystem.MessageSystem;
+import messagesystem.MessageSystemContext;
 import messagesystem.message.Message;
-import messagesystem.message.MessageSystemContext;
 import messagesystem.message.messageimpl.MsgGetUserId;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -18,7 +18,6 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import java.io.IOException;
-import java.util.concurrent.LinkedBlockingQueue;
 
 @WebSocket
 public class GetUserWebSocket implements FrontendService {
@@ -29,7 +28,6 @@ public class GetUserWebSocket implements FrontendService {
     public GetUserWebSocket(MessageSystemContext context, Address address) {
         this.context = context;
         this.address = address;
-        init();
     }
 
     public GetUserWebSocket() {
@@ -46,16 +44,26 @@ public class GetUserWebSocket implements FrontendService {
         System.out.println(session.getRemoteAddress().getHostString() + " closed!");
     }
 
-    @OnWebSocketMessage
     @Override
+    public void init() {
+        context.getMessageSystem().addAddressee(this);
+    }
+
+    @OnWebSocketMessage
     public void handleRequest(String data) {
-        System.out.println("server get from site: " + data);
+        System.out.println("server get: " + data);
 
         JsonObject jsonObject = new JsonParser().parse(data).getAsJsonObject();
         String value= jsonObject.get("id").getAsString();
         Message message = new MsgGetUserId(getAddress(), context.getDbAddress(), value);
         context.getMessageSystem().sendMessage(message);
+
         System.out.println("server send to MS: " + value);
+    }
+
+    @Override
+    public <T> void sendResult(T message) {
+
     }
 
     public Session getSession() {
@@ -66,28 +74,7 @@ public class GetUserWebSocket implements FrontendService {
         this.session = session;
     }
 
-    @Override
-    public void init() {
-        context.getMessageSystem().addAddressee(this);
-        Thread thread = new Thread(() -> {
-            LinkedBlockingQueue<Message> queue = context.getMessageSystem().getMessagesMap().get(this.getAddress());
-            while (true) {
-                try {
-                    Message message = queue.take();
-                    System.out.println("queue --" + message.getFrom().toString() + "-" +message.getTo().toString());
-                    message.exec(this);
-                } catch (InterruptedException e) {
-                   // logger.log(Level.INFO, "Thread interrupted. Finishing: " + name);
-                    return;
-                }
-            }
-        });
-        thread.start();
-
-    }
-
-    @Override
-    public <T> void sendResult(T user) {
+    public <T> void sendMessage(T user) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
         Gson gson = builder.create();
@@ -98,15 +85,14 @@ public class GetUserWebSocket implements FrontendService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("server send to site: "+value);
+        System.out.println("server send: "+value);
     }
 
-    @Override
+
     public Address getAddress() {
         return address;
     }
 
-    @Override
     public MessageSystem getMS() {
         return context.getMessageSystem();
     }

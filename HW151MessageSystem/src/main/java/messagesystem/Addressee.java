@@ -1,12 +1,10 @@
-package messagesystem.adressees;
-
-import messagesystem.Address;
-import messagesystem.MessageSystem;
+package messagesystem;
 
 /**
  * @author tully
  */
 public interface Addressee {
+    void init();
     Address getAddress();
 
     MessageSystem getMS();

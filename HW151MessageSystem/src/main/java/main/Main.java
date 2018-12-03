@@ -6,7 +6,7 @@ import dbService.DBService;
 import dbService.DBServiceHibernateImpl;
 import messagesystem.Address;
 import messagesystem.MessageSystem;
-import messagesystem.message.MessageSystemContext;
+import messagesystem.MessageSystemContext;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;

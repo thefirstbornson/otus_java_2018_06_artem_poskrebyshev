@@ -1,8 +1,8 @@
 package messagesystem.message;
 
 import messagesystem.Address;
-import messagesystem.adressees.Addressee;
-import messagesystem.adressees.FrontendService;
+import messagesystem.Addressee;
+import websocket.FrontendService;
 
 public abstract class MsgToFrontend extends Message {
     public MsgToFrontend(Address from, Address to) {

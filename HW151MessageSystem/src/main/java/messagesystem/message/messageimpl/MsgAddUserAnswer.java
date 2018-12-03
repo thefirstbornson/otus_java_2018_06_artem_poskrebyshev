@@ -16,8 +16,6 @@ public class MsgAddUserAnswer extends MsgToFrontend {
 
     @Override
     public void exec(FrontendService frontendService) {
-        System.out.println("MsgAddUserAnswer - Start executing");
-//        System.out.println("MsgGetUserIdAnswer - Sending from MS: " + user.toString());
         frontendService.sendResult(user);
     }
 }

@@ -49,12 +49,6 @@ public class AddUserWebSocket  implements FrontendService {
         }
             Message message = new MsgAddUser(getAddress(), context.getDbAddress(), user);
             context.getMessageSystem().sendMessage(message);
-
-//            String value = user!=null?gson.toJson(user):"not found";
-//            session.getRemote().sendString(value);
-//            System.out.println("server send: "+value);
-
-
     }
 
     @Override

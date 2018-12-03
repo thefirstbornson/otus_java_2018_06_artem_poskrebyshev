@@ -16,7 +16,6 @@ public class MsgGetUserId extends MsgToDB {
 
     @Override
     public void exec(DBService dbService) {
-        System.out.println("MsgGetUserId - Start executing");
         DataSet user = new UserDataSet();
         try {
             int id = Integer.parseInt(value);
@@ -28,7 +27,6 @@ public class MsgGetUserId extends MsgToDB {
         catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println("MsgGetUserId - Sending MsgGetUserIdAnswer to queue");
         dbService.getMS().sendMessage(new MsgGetUserIdAnswer(getTo(), getFrom(), user));
     }
 

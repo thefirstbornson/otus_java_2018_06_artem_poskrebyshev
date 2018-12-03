@@ -5,7 +5,7 @@ import messagesystem.message.MsgToFrontend;
 import websocket.FrontendService;
 
 public class MsgUserCountAnswer extends MsgToFrontend {
-    int count;
+    private int count;
     public MsgUserCountAnswer(Address from, Address to, int count) {
         super(from, to);
         this.count = count;
@@ -13,7 +13,6 @@ public class MsgUserCountAnswer extends MsgToFrontend {
 
     @Override
     public void exec(FrontendService frontendService) {
-        System.out.println("MsgUserCountAnswer - Start executing");
         frontendService.sendResult(count);
     }
 }

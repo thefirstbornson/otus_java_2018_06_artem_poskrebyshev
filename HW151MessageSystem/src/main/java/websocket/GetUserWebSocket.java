@@ -60,8 +60,6 @@ public class GetUserWebSocket implements FrontendService {
 
         Message message = new MsgGetUserId(getAddress(), context.getDbAddress(), value);
         context.getMessageSystem().sendMessage(message);
-
-        System.out.println("server send to MS: " + value);
     }
 
     @Override

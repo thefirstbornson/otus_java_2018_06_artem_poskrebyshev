@@ -14,8 +14,6 @@ public abstract class MsgToFrontend extends Message {
 
         if (addressee instanceof FrontendService) {
             exec((FrontendService) addressee);
-        } else {
-            //todo error!
         }
     }
 

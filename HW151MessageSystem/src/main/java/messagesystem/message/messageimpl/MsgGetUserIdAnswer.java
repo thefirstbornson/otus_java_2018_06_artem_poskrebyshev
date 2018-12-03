@@ -6,7 +6,7 @@ import messagesystem.message.MsgToFrontend;
 import websocket.FrontendService;
 
 public class MsgGetUserIdAnswer extends MsgToFrontend {
-    DataSet user;
+    private DataSet user;
 
     public MsgGetUserIdAnswer(Address from, Address to, DataSet user) {
         super(from, to);

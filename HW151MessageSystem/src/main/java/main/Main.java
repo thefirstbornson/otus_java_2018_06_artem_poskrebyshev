@@ -25,10 +25,10 @@ public class Main {
         MessageSystem messageSystem = new MessageSystem();
         MessageSystemContext mscontext = new MessageSystemContext(messageSystem);
 
-        Address addUserFrontend = new Address("AddUserFrontend");
-        Address getUserFrontend = new Address("GetUserFrontend");
-        Address usersCountFrontend  = new Address( "UsersCountFrontend");
-        Address dbAddress = new Address("DB");
+        Address addUserFrontend     = new Address("AddUserFrontend");
+        Address getUserFrontend     = new Address("GetUserFrontend");
+        Address usersCountFrontend  = new Address("UsersCountFrontend");
+        Address dbAddress           = new Address("DB");
 
         mscontext.setFrontAddress(getUserFrontend);
         mscontext.setFrontAddress(addUserFrontend);
@@ -47,7 +47,6 @@ public class Main {
         servletContextHandler.addServlet(new ServletHolder(new AddUserWebSocketServlet(mscontext, addUserFrontend)), "/adduser");
         servletContextHandler.addServlet(new ServletHolder(new GetUserWebSocketServlet(mscontext, getUserFrontend)), "/getuser");
         servletContextHandler.addServlet(new ServletHolder(new UsersCntWebSocketServlet(mscontext, usersCountFrontend)), "/cntusrs");
-        messageSystem.start();
 
 
         Server server = new Server(PORT);

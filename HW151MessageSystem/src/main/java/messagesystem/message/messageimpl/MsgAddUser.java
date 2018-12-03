@@ -14,9 +14,7 @@ public class MsgAddUser extends MsgToDB {
 
     @Override
     public void exec(DBService dbService) {
-        System.out.println("MsgAddUser - Start executing");
         dbService.save(dataSet);
-        System.out.println("MsgAddUser - Sending MsgAddUserIdAnswer to queue");
         dbService.getMS().sendMessage(new MsgAddUserAnswer(getTo(), getFrom(), dataSet));
     }
 }

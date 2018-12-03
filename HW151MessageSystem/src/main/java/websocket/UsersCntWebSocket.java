@@ -39,8 +39,6 @@ public class UsersCntWebSocket implements FrontendService {
 
         Message message = new MsgUserCount(getAddress(), context.getDbAddress());
         context.getMessageSystem().sendMessage(message);
-
-        System.out.println("server send to MS: " + data);
     }
 
     @Override

@@ -3,7 +3,7 @@ package messagesystem.message.messageimpl;
 import datasets.DataSet;
 import messagesystem.Address;
 import messagesystem.message.MsgToFrontend;
-import messagesystem.adressees.FrontendService;
+import websocket.FrontendService;
 
 public class MsgGetUserIdAnswer extends MsgToFrontend {
     DataSet user;
@@ -11,12 +11,14 @@ public class MsgGetUserIdAnswer extends MsgToFrontend {
     public MsgGetUserIdAnswer(Address from, Address to, DataSet user) {
         super(from, to);
         this.user = user;
+
     }
 
     @Override
     public void exec(FrontendService frontendService) {
-        System.out.println("MsgGetUserIdAnswer executed");
+        System.out.println("MsgGetUserIdAnswer - Start executing");
+//        System.out.println("MsgGetUserIdAnswer - Sending from MS: " + user.toString());
         frontendService.sendResult(user);
-        System.out.println("server send from MS: " + user.toString());
+
     }
 }

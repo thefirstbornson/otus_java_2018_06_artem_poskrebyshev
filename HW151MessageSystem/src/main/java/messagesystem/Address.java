@@ -38,6 +38,6 @@ public final class Address {
 
     @Override
     public String toString() {
-        return this.getId();
+        return getId();
     }
 }

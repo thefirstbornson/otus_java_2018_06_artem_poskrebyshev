@@ -8,6 +8,7 @@ import datasets.PhoneDataSet;
 import datasets.UserDataSet;
 import messagesystem.Address;
 import messagesystem.MessageSystem;
+import messagesystem.message.Message;
 import messagesystem.message.MessageSystemContext;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
@@ -15,6 +16,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import java.util.List;
+import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class DBServiceHibernateImpl implements DBService {
@@ -47,6 +49,21 @@ public class DBServiceHibernateImpl implements DBService {
     @Override
     public void init() {
         context.getMessageSystem().addAddressee(this);
+
+        Thread thread = new Thread(() -> {
+            LinkedBlockingQueue<Message> queue = context.getMessageSystem().getMessagesMap().get(this.getAddress());
+            while (true) {
+                try {
+                    Message message = queue.take();
+                    System.out.println("queue --" + message.getFrom().toString() + "-" +message.getTo().toString());
+                    message.exec(this);
+                } catch (InterruptedException e) {
+                    // logger.log(Level.INFO, "Thread interrupted. Finishing: " + name);
+                    return;
+                }
+            }
+        });
+        thread.start();
     }
 
     @Override

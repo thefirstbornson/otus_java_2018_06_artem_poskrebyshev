@@ -2,7 +2,6 @@ package messagesystem.message.messageimpl;
 
 import datasets.DataSet;
 import datasets.UserDataSet;
-import dbService.DBCache;
 import dbService.DBService;
 import messagesystem.Address;
 import messagesystem.message.MsgToDB;
@@ -17,7 +16,7 @@ public class MsgGetUserId extends MsgToDB {
 
     @Override
     public void exec(DBService dbService) {
-        System.out.println("MsgGetUserId executed");
+        System.out.println("MsgGetUserId - Start executing");
         DataSet user = new UserDataSet();
         try {
             int id = Integer.parseInt(value);
@@ -29,7 +28,7 @@ public class MsgGetUserId extends MsgToDB {
         catch (Exception e){
             e.printStackTrace();
         }
-        System.out.println("MsgGetUserId call MsgGetUserIdAnswer");
+        System.out.println("MsgGetUserId - Sending MsgGetUserIdAnswer to queue");
         dbService.getMS().sendMessage(new MsgGetUserIdAnswer(getTo(), getFrom(), user));
     }
 }

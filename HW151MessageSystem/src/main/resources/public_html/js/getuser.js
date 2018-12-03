@@ -33,9 +33,6 @@ function fieldsToJson(){
 }
 
 function sendMessage() {
-    if(ws.readyState === ws.CLOSED){
-        ws = new WebSocket("ws://"+host+"/getuser");
-    }
     var json = fieldsToJson();
     ws.send(json);
 

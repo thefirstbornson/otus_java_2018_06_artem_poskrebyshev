@@ -1,6 +1,6 @@
 package servlets;
 
-import base.DBService;
+import dbService.DBService;
 import datasets.DataSet;
 import datasets.UserDataSet;
 import org.apache.commons.lang3.text.WordUtils;

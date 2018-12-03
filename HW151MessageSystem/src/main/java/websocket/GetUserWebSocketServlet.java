@@ -1,26 +1,21 @@
 package websocket;
 
-import base.DBService;
-import dbCache.DBCache;
+import messagesystem.Address;
+import messagesystem.message.MessageSystemContext;
 import org.eclipse.jetty.websocket.servlet.*;
 
 public class GetUserWebSocketServlet extends WebSocketServlet {
-    private final DBService dbService;
-    private final DBCache dbCache;
+    private Address address;
+    private MessageSystemContext mscontext;
 
-    public GetUserWebSocketServlet(DBService dbService, DBCache dbCache) {
-        this.dbService = dbService;
-        this.dbCache = dbCache;
+    public GetUserWebSocketServlet(MessageSystemContext mscontext, Address address) {
+        this.mscontext = mscontext;
+        this.address = address;
     }
 
     @Override
     public void configure(WebSocketServletFactory factory) {
         factory.getPolicy().setIdleTimeout(10000);
-        factory.setCreator(new WebSocketCreator() {
-            @Override
-            public Object createWebSocket(ServletUpgradeRequest req, ServletUpgradeResponse resp) {
-                return new GetUserWebSocket(dbService, dbCache);
-            }
-        });
+        factory.setCreator((req, resp) -> new GetUserWebSocket( mscontext, address));
     }
 }

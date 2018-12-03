@@ -1,12 +1,14 @@
 package dbService;
 
-import base.DBService;
 import dao.DAO;
 import dao.DaoFactory;
 import datasets.AddressDataSet;
 import datasets.DataSet;
 import datasets.PhoneDataSet;
 import datasets.UserDataSet;
+import messagesystem.Address;
+import messagesystem.MessageSystem;
+import messagesystem.message.MessageSystemContext;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -17,9 +19,14 @@ import java.util.List;
 
 public class DBServiceHibernateImpl implements DBService {
     private final SessionFactory sessionFactory;
+    private final Address address;
+    private final MessageSystemContext context;
+    private final DBCache dbCache;
 
-    public DBServiceHibernateImpl() {
-
+    public DBServiceHibernateImpl(MessageSystemContext context, Address address, DBCache dbCache) {
+        this.context = context;
+        this.address = address;
+        this.dbCache = dbCache;
         Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
 
         configuration.addAnnotatedClass(DataSet.class);
@@ -38,6 +45,11 @@ public class DBServiceHibernateImpl implements DBService {
     }
 
     @Override
+    public void init() {
+        context.getMessageSystem().addAddressee(this);
+    }
+
+    @Override
     public <T extends DataSet> void save(T user) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.getTransaction();
@@ -52,7 +64,12 @@ public class DBServiceHibernateImpl implements DBService {
     public <T extends DataSet> T load(long id, Class<T> clazz) {
         try (Session session = sessionFactory.openSession()) {
             DAO dao = DaoFactory.getDataSetDAO(clazz, session);
-            return (T) Hibernate.unproxy(dao.load(id, clazz));
+            T dataset = dbCache.get(id);
+            if (dataset==null) {
+                dataset = (T) Hibernate.unproxy(dao.load(id, clazz));
+                if (dataset!=null) dbCache.put(id, dataset);
+            }
+            return dataset;
         } catch (ObjectNotFoundException e){
             return null;
         }
@@ -69,5 +86,15 @@ public class DBServiceHibernateImpl implements DBService {
     @Override
     public void close() throws Exception {
         sessionFactory.close();
+    }
+
+    @Override
+    public Address getAddress() {
+        return null;
+    }
+
+    @Override
+    public MessageSystem getMS() {
+        return null;
     }
 }

@@ -1,4 +1,4 @@
-package dbCache;
+package dbService;
 
 public interface DBCache{
      <K,V> void put(K key, V value);

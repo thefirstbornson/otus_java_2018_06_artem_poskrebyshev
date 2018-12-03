@@ -1,4 +1,4 @@
-package dbCache;
+package dbService.dbCache;
 
 import org.apache.commons.collections4.MapIterator;
 import org.apache.commons.collections4.map.LRUMap;

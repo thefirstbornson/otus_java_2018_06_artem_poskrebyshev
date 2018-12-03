@@ -18,6 +18,7 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 
 import java.io.IOException;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @WebSocket
 public class GetUserWebSocket implements FrontendService {
@@ -28,6 +29,7 @@ public class GetUserWebSocket implements FrontendService {
     public GetUserWebSocket(MessageSystemContext context, Address address) {
         this.context = context;
         this.address = address;
+        init();
     }
 
     public GetUserWebSocket() {
@@ -47,6 +49,20 @@ public class GetUserWebSocket implements FrontendService {
     @Override
     public void init() {
         context.getMessageSystem().addAddressee(this);
+        Thread thread = new Thread(() -> {
+            LinkedBlockingQueue<Message> queue = context.getMessageSystem().getMessagesMap().get(this.getAddress());
+            while (true) {
+                try {
+                    Message message = queue.take();
+                    System.out.println("queue --" + message.getFrom().toString() + "-" +message.getTo().toString());
+                    message.exec(this);
+                } catch (InterruptedException e) {
+                    // logger.log(Level.INFO, "Thread interrupted. Finishing: " + name);
+                    return;
+                }
+            }
+        });
+        thread.start();
     }
 
     @OnWebSocketMessage
@@ -62,19 +78,7 @@ public class GetUserWebSocket implements FrontendService {
     }
 
     @Override
-    public <T> void sendResult(T message) {
-
-    }
-
-    public Session getSession() {
-        return session;
-    }
-
-    public void setSession(Session session) {
-        this.session = session;
-    }
-
-    public <T> void sendMessage(T user) {
+    public <T> void sendResult(T user) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
         Gson gson = builder.create();
@@ -86,6 +90,18 @@ public class GetUserWebSocket implements FrontendService {
             e.printStackTrace();
         }
         System.out.println("server send: "+value);
+    }
+
+    public Session getSession() {
+        return session;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    public <T> void sendMessage(T user) {
+
     }
 
 

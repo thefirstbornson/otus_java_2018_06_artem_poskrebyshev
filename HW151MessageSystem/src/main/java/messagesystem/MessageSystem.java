@@ -39,6 +39,27 @@ public final class MessageSystem {
         messagesMap.get(message.getTo()).add(message);
     }
 
+    public void addWorker (Addressee addressee){
+        String name = "MS-worker-" + addressee.getAddress().getId();
+
+        Thread thread = new Thread(() -> {
+            LinkedBlockingQueue<Message> queue = messagesMap.get(addressee.getAddress());
+            while (true) {
+                try {
+                    Message message = queue.take();
+                    System.out.println("queue --" + message.getFrom().toString() + "-" +message.getTo().toString());
+                    message.exec(addressee);
+                } catch (InterruptedException e) {
+                    // logger.log(Level.INFO, "Thread interrupted. Finishing: " + name);
+                    return;
+                }
+            }
+        });
+            thread.setName(name);
+            thread.start();
+            workers.add(thread);
+    }
+
 
     public Map<Address, Addressee> getAddresseeMap() {
         return addresseeMap;

@@ -57,6 +57,7 @@ public class GetUserWebSocket implements FrontendService {
 
         JsonObject jsonObject = new JsonParser().parse(data).getAsJsonObject();
         String value= jsonObject.get("id").getAsString();
+
         Message message = new MsgGetUserId(getAddress(), context.getDbAddress(), value);
         context.getMessageSystem().sendMessage(message);
 

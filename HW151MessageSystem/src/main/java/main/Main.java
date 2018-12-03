@@ -44,7 +44,7 @@ public class Main {
         resourceHandler.setBaseResource(resource);
 
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        servletContextHandler.addServlet(new ServletHolder(new AddUserWebSocketServlet(dbService)), "/adduser");
+        servletContextHandler.addServlet(new ServletHolder(new AddUserWebSocketServlet(mscontext, addUserFrontend)), "/adduser");
         servletContextHandler.addServlet(new ServletHolder(new GetUserWebSocketServlet(mscontext, getUserFrontend)), "/getuser");
         servletContextHandler.addServlet(new ServletHolder(new UsersCntWebSocketServlet(dbService)), "/cntusrs");
         messageSystem.start();

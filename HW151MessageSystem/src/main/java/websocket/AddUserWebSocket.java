@@ -1,11 +1,16 @@
 package websocket;
 
-import dbService.DBService;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import datasets.DataSet;
 import datasets.UserDataSet;
 import gsonconverters.UserDataSetConverter;
+import messagesystem.Address;
+import messagesystem.MessageSystem;
+import messagesystem.MessageSystemContext;
+import messagesystem.message.Message;
+import messagesystem.message.messageimpl.MsgAddUser;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -15,32 +20,56 @@ import org.eclipse.jetty.websocket.api.annotations.WebSocket;
 import java.io.IOException;
 
 @WebSocket
-public class AddUserWebSocket {
+public class AddUserWebSocket  implements FrontendService {
     private Session session;
-    DBService dbService;
+    private Address address;
+    private MessageSystemContext context;
 
-    public AddUserWebSocket(DBService dbService) {
-        this.dbService = dbService;
+    public AddUserWebSocket(MessageSystemContext context, Address address) {
+        this.context = context;
+        this.address = address;
+        init();
     }
 
 
     @OnWebSocketMessage
-    public void onMessage(String data) {
+    @Override
+    public void handleRequest(String data) {
+
         System.out.println("server get: " + data);
 
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
         Gson gson = builder.create();
+        DataSet user = new UserDataSet();
         try {
-            UserDataSet user = gson.fromJson(data, UserDataSet.class);
-            dbService.save(user);
-            String value = user!=null?gson.toJson(user):"not found";
-            session.getRemote().sendString(value);
-            System.out.println("server send: "+value);
-        } catch (IOException | JsonSyntaxException e) {
+             user = gson.fromJson(data, UserDataSet.class);
+        } catch ( JsonSyntaxException e) {
             e.printStackTrace();
         }
+            Message message = new MsgAddUser(getAddress(), context.getDbAddress(), user);
+            context.getMessageSystem().sendMessage(message);
 
+//            String value = user!=null?gson.toJson(user):"not found";
+//            session.getRemote().sendString(value);
+//            System.out.println("server send: "+value);
+
+
+    }
+
+    @Override
+    public <T> void sendResult(T user) {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
+        Gson gson = builder.create();
+
+        String value = user!=null?gson.toJson(user):gson.toJson("not found");
+        try {
+            session.getRemote().sendString(value);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("server send: "+value);
     }
 
 
@@ -63,4 +92,20 @@ public class AddUserWebSocket {
     public void onClose(Session session, int status, String reason) {
         System.out.println(session.getRemoteAddress().getHostString() + " closed!");
     }
+
+    @Override
+    public void init() {
+        context.getMessageSystem().addAddressee(this);
+        context.getMessageSystem().addWorker(this);
+    }
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public MessageSystem getMS() {
+        return context.getMessageSystem();
+    }
+
+
 }

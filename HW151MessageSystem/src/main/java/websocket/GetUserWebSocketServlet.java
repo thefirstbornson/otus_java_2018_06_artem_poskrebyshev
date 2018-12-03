@@ -1,8 +1,9 @@
 package websocket;
 
 import messagesystem.Address;
-import messagesystem.message.MessageSystemContext;
-import org.eclipse.jetty.websocket.servlet.*;
+import messagesystem.MessageSystemContext;
+import org.eclipse.jetty.websocket.servlet.WebSocketServlet;
+import org.eclipse.jetty.websocket.servlet.WebSocketServletFactory;
 
 public class GetUserWebSocketServlet extends WebSocketServlet {
     private Address address;
@@ -16,6 +17,6 @@ public class GetUserWebSocketServlet extends WebSocketServlet {
     @Override
     public void configure(WebSocketServletFactory factory) {
         factory.getPolicy().setIdleTimeout(10000);
-        factory.setCreator((req, resp) -> new GetUserWebSocket( mscontext, address));
+        factory.setCreator((req, resp) -> new GetUserWebSocket(mscontext, address));
     }
 }

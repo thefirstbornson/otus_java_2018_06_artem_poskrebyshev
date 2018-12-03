@@ -43,6 +43,8 @@ public class AddUserWebSocket {
 
     }
 
+
+
     @OnWebSocketConnect
     public void onConnect(Session session) throws IOException {
         System.out.println(session.getRemoteAddress().getHostString() + " connected!");

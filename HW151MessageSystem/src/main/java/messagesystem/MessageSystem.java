@@ -1,5 +1,6 @@
 package messagesystem;
 
+import messagesystem.adressees.Addressee;
 import messagesystem.message.Message;
 
 import java.util.ArrayList;
@@ -33,7 +34,8 @@ public final class MessageSystem {
     }
 
     public void sendMessage(Message message) {
-        messagesMap.get(message.getTo()).add(message);
+        Address adr = message.getTo();
+        messagesMap.get(adr).add(message);
     }
 
 

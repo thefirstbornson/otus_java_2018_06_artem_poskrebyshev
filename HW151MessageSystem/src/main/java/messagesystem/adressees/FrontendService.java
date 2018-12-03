@@ -1,6 +1,4 @@
-package websocket;
-
-import messagesystem.Addressee;
+package messagesystem.adressees;
 
 public interface FrontendService extends Addressee {
     void init();

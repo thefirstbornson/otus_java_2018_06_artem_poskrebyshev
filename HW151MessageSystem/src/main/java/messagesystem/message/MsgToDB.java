@@ -2,7 +2,8 @@ package messagesystem.message;
 
 import dbService.DBService;
 import messagesystem.Address;
-import messagesystem.Addressee;
+import messagesystem.adressees.Addressee;
+import messagesystem.adressees.DBServiceMS;
 
 public abstract class MsgToDB extends Message {
     public MsgToDB(Address from, Address to) {
@@ -12,9 +13,9 @@ public abstract class MsgToDB extends Message {
     @Override
     public void exec(Addressee addressee) {
         if (addressee instanceof DBService) {
-            exec((DBService) addressee);
+            exec((DBServiceMS) addressee);
         }
     }
 
-    public abstract void exec(DBService dbService);
+    public abstract void exec(DBServiceMS dbServiceMS);
 }

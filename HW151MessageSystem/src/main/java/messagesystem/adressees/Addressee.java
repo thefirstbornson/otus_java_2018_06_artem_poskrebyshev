@@ -1,4 +1,7 @@
-package messagesystem;
+package messagesystem.adressees;
+
+import messagesystem.Address;
+import messagesystem.MessageSystem;
 
 /**
  * @author tully

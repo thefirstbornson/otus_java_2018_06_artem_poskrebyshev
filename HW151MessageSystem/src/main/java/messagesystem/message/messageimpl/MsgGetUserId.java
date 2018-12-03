@@ -2,9 +2,8 @@ package messagesystem.message.messageimpl;
 
 import datasets.DataSet;
 import datasets.UserDataSet;
-import dbService.DBCache;
-import dbService.DBService;
 import messagesystem.Address;
+import messagesystem.adressees.DBServiceMS;
 import messagesystem.message.MsgToDB;
 
 public class MsgGetUserId extends MsgToDB {
@@ -16,18 +15,18 @@ public class MsgGetUserId extends MsgToDB {
     }
 
     @Override
-    public void exec(DBService dbService) {
+    public void exec(DBServiceMS dbServiceMS) {
         DataSet user = new UserDataSet();
         try {
             int id = Integer.parseInt(value);
             if (id > 0) {
-                    user = dbService.load(id, UserDataSet.class);
+                    user = dbServiceMS.getUser(id);
 
             }
         }
         catch (Exception e){
             e.printStackTrace();
         }
-        dbService.getMS().sendMessage(new MsgGetUserIdAnswer(getTo(), getFrom(), user));
+        dbServiceMS.getMS().sendMessage(new MsgGetUserIdAnswer(getTo(), getFrom(), user));
     }
 }

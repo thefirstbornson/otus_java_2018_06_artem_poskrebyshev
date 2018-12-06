@@ -1,5 +1,5 @@
 [0.056s][info][gc] Using Serial
-[0.057s][info][gc,heap,coops] Heap address: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
+[0.057s][info][gc,heap,coops] Heap socket: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
 [1.828s][info][gc,start     ] GC(0) Pause Young (Allocation Failure)
 [2.553s][info][gc,heap      ] GC(0) DefNew: 139776K->17471K(157248K)
 [2.553s][info][gc,heap      ] GC(0) Tenured: 0K->106039K(349568K)

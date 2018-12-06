@@ -56,7 +56,12 @@ public class GetUserWebSocket implements FrontendService {
         System.out.println("server get: " + data);
 
         JsonObject jsonObject = new JsonParser().parse(data).getAsJsonObject();
-        String value= jsonObject.get("id").getAsString();
+        int value=0;
+        try {
+            value= Integer.parseInt(jsonObject.get("id").getAsString());
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+        }
 
         Message message = new MsgGetUserId(getAddress(), context.getDbAddress(), value);
         context.getMessageSystem().sendMessage(message);

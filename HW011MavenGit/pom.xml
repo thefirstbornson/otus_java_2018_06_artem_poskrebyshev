@@ -47,7 +47,7 @@
             <configuration>
                 <archive>
                     <manifest>
-                        <mainClass>ru.otus.hw011.Main</mainClass>
+                        <mainClass>ru.otus.hw011.frontMain.FrontMain</mainClass>
                     </manifest>
                 </archive>
             </configuration>
@@ -73,7 +73,7 @@
                 </descriptorRefs>
                 <archive>
                     <manifest>
-                        <mainClass>ru.otus.hw011.Main</mainClass>
+                        <mainClass>ru.otus.hw011.frontMain.FrontMain</mainClass>
                     </manifest>
                 </archive>
             </configuration>
@@ -106,7 +106,7 @@
                 <outjar>${project.build.finalName}-small.jar</outjar>
                 <includeDependency>true</includeDependency>
                 <options>
-                    <option>-keep public class ru.otus.hw011.Main { public static void main(java.lang.String[]); }</option>
+                    <option>-keep public class ru.otus.hw011.frontMain.FrontMain { public static void main(java.lang.String[]); }</option>
                     <option>-dontwarn</option>
                 </options>
                 <libs>

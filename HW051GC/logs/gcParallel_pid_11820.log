@@ -1,5 +1,5 @@
 [0.102s][info][gc] Using Parallel
-[0.102s][info][gc,heap,coops] Heap address: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
+[0.102s][info][gc,heap,coops] Heap socket: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
 [1.648s][info][gc,start     ] GC(0) Pause Young (Allocation Failure)
 [2.043s][info][gc,heap      ] GC(0) PSYoungGen: 131584K->21483K(153088K)
 [2.044s][info][gc,heap      ] GC(0) ParOldGen: 0K->94768K(349696K)

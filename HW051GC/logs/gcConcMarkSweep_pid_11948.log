@@ -1,5 +1,5 @@
 [0.109s][info][gc] Using Concurrent Mark Sweep
-[0.109s][info][gc,heap,coops] Heap address: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
+[0.109s][info][gc,heap,coops] Heap socket: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
 [1.427s][info][gc,start     ] GC(0) Pause Young (Allocation Failure)
 [1.428s][info][gc,task      ] GC(0) Using 8 workers of 8 for evacuation
 [4.313s][info][gc,heap      ] GC(0) ParNew: 139776K->17470K(157248K)

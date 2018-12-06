@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8"/>
+    <title>Admin</title>
+    <script src="js/getuser.js" type="text/javascript"></script>
+</head>
+<body onload="init();">
+<div class="top">
+    <a href="index.html">
+        <img src="otus.png"/>
+    </a>
+    <br/>
+    <table width="462">
+        <tr>
+            <th><a href="adduser.html">Add user</a></th>
+            <th><a href="getuser.html">Get user by ID</a></th>
+            <th><a href="numusers.html">Get all users</a></th>
+        </tr>
+    </table>
+</div>
+
+<div class="getuser">
+    <form action="getuser" method="POST" id="getuserform">
+        <p>Enter user ID: <input type="text" name="id"/></p>
+    </form>
+    <button type="submit" class="a_submit"onclick="sendMessage();">Submit</button>
+    <p>Requested user: </p>
+    <pre id="output"></pre>
+</div>
+
+</body>
+</html>

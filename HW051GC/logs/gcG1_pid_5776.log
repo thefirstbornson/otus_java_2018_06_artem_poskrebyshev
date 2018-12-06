@@ -1,6 +1,6 @@
 [0.032s][info][gc,heap] Heap region size: 1M
 [0.085s][info][gc     ] Using G1
-[0.085s][info][gc,heap,coops] Heap address: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
+[0.085s][info][gc,heap,coops] Heap socket: 0x00000000e0000000, size: 512 MB, Compressed Oops mode: 32-bit
 [1.209s][info][gc,start     ] GC(0) Pause Young (G1 Evacuation Pause)
 [1.209s][info][gc,task      ] GC(0) Using 8 workers of 8 for evacuation
 [1.305s][info][gc,phases    ] GC(0)   Pre Evacuate Collection Set: 0.1ms

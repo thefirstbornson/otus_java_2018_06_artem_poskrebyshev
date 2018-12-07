@@ -1,18 +1,16 @@
 package serversocket;
 
 
-import messagesystem.message.Message;
-
 import java.io.Closeable;
 import java.net.Socket;
 
 
 public interface MsgWorker extends Closeable {
-    void send(Message msg);
+    void send(String msg);
 
-    Message poll();
+    String poll();
 
-    Message take() throws InterruptedException;
+    String take() throws InterruptedException;
     Socket getSocket();
 
 

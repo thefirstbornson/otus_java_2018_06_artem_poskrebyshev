@@ -6,6 +6,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import datasets.UserDataSet;
 import fcontext.FrontendContext;
+import frontsocket.ClientSocketMsgWorker;
 import gsonconverters.UserDataSetConverter;
 import messagesystem.Address;
 import messagesystem.FrontendService;
@@ -14,23 +15,56 @@ import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import serversocket.SocketMsgWorker;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebSocket
 public class GetUserWebSocket implements FrontendService {
+    private static final Logger logger = Logger.getLogger(GetUserWebSocket.class.getName());
     private Session session;
-    private Address address;
-    private FrontendContext context;
+//    private Address address;
+    private FrontendContext frontendContext;
+    SocketMsgWorker socketGetUser;
 
 
-    public GetUserWebSocket(FrontendContext context, Address socket) {
-        this.context = context;
-        this.address = address;
-        init();
+    public GetUserWebSocket(FrontendContext frontendContext)  {
+        this.frontendContext = frontendContext;
+        System.out.println("Getuserwebsocket created");
+//        try {
+//            startGetUserSocket();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 
     public GetUserWebSocket() {
+
+    }
+
+    private void startGetUserSocket () throws IOException {
+        socketGetUser = new ClientSocketMsgWorker(frontendContext.HOST, frontendContext.SOCKET_PORT);
+        socketGetUser.init();
+        System.out.println("Front socket " +socketGetUser);
+
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(() -> {
+            try {
+                while (true) {
+                    final Object msg = socketGetUser.take();
+                    System.out.println("Message received: " + msg);
+                }
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getMessage());
+            }
+        });
+
+
     }
 
     @OnWebSocketConnect
@@ -52,7 +86,7 @@ public class GetUserWebSocket implements FrontendService {
 
     @Override
     public Address getAddress() {
-        return address;
+        return null;
     }
 
     @Override
@@ -78,8 +112,8 @@ public class GetUserWebSocket implements FrontendService {
             e.printStackTrace();
         }
 
-//        Message message = new MsgGetUserId(getSocket(), context.getDbSocket(), value);
-//        context.getClient().send(message);
+ //       Message message = new MsgGetUserId(getSocket(), context.getDbSocket(), value);
+      //  socketGetUser.send("hello!");
     }
 
     @Override

@@ -4,7 +4,7 @@ import serversocket.MsgWorker;
 
 public class MessageSystemContext implements Addressee{
     private Address msAddress;
-    private Address dbAddress;
+    private int dbAddress;
 
     public MsgWorker getMsContextworker() {
         return msContextworker;
@@ -36,11 +36,11 @@ public class MessageSystemContext implements Addressee{
 //        this.frontAddressMap.put(frontAddress.getId(),frontAddress);
 //    }
 
-    public Address getDbAddress() {
+    public int getDbAddress() {
         return dbAddress;
     }
 
-    public void setDbAddress(Address dbAddress) {
+    public void setDbAddress(int dbAddress) {
         this.dbAddress = dbAddress;
     }
 

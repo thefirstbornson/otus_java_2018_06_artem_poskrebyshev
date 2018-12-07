@@ -12,6 +12,16 @@ public class FrontendContext implements FrontendService {
     private Address dbAdress;
     private Address msAdress;
     private Map<String, Address> frontAddressMap;
+    public static final String HOST = "localhost";
+    public static final int SOCKET_PORT = 5050;
+
+    public Address getMsAdress() {
+        return msAdress;
+    }
+
+    public void setMsAdress(Address msAdress) {
+        this.msAdress = msAdress;
+    }
 
     public FrontendContext(Address address) {
         this.address = address;

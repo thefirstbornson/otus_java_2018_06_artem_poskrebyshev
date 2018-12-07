@@ -10,8 +10,8 @@ public class MsgGetDB extends MsgToMS {
 
     @Override
     public void exec(MessageSystemContext mscontext) {
-        mscontext.getMsContextworker().send(new MsgGetDBAnswer(getTo()
-                                                ,getFrom(),mscontext.getDbAddress()));
+//        mscontext.getMsContextworker().send(new MsgGetDBAnswer(getTo()
+//                                                ,getFrom(),mscontext.getDbAddress()));
     }
 
 }

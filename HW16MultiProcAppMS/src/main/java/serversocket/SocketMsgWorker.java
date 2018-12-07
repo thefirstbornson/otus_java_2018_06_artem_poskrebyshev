@@ -1,12 +1,6 @@
 package serversocket;
 
-import messagesystem.message.Message;
-import messagesystem.message.MsgToClient;
-
-import java.io.EOFException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
@@ -23,8 +17,8 @@ public class SocketMsgWorker implements MsgWorker {
     private static final int WORKERS_COUNT = 2;
     private static final int QUEUE_CAPACITY = 10;
 
-    private final BlockingQueue<Message> output = new LinkedBlockingQueue<>(QUEUE_CAPACITY);
-    private final BlockingQueue<Message> input = new LinkedBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<String> output = new LinkedBlockingQueue<>(QUEUE_CAPACITY);
+    private final BlockingQueue<String> input = new LinkedBlockingQueue<>(QUEUE_CAPACITY);
 
     private final ExecutorService executor;
     protected final Socket socket;
@@ -35,17 +29,17 @@ public class SocketMsgWorker implements MsgWorker {
     }
 
     @Override
-    public void send(Message msg) {
+    public void send(String msg) {
         output.add(msg);
     }
 
     @Override
-    public Message poll() {
+    public String poll() {
         return input.poll();
     }
 
     @Override
-    public Message take() throws InterruptedException {
+    public String take() throws InterruptedException {
         return input.take();
     }
 
@@ -66,12 +60,13 @@ public class SocketMsgWorker implements MsgWorker {
 
 
     private void sendMessage() {
-        try (ObjectOutputStream sender = new ObjectOutputStream(socket.getOutputStream())) {
+        try (PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)) {
             while (socket.isConnected()) {
-                final Message msg = (MsgToClient) output.take(); //blocks
-                System.out.println("Sending message: " + msg.toString() + "from socket" + socket.toString());
-                sender.writeObject(msg);
-                System.out.println("!");
+                final String msg = output.take(); //blocks
+                //final String json = MAPPER.writeValueAsString(msg);
+                System.out.println("Sending message: " + msg);
+                writer.println(msg);
+                writer.println();//line with json + an empty line
             }
         } catch (InterruptedException | IOException e) {
             logger.log(Level.SEVERE, e.getMessage());
@@ -80,23 +75,22 @@ public class SocketMsgWorker implements MsgWorker {
 
 
     private void receiveMessage() {
-        try (final ObjectInputStream reader = new ObjectInputStream(socket.getInputStream())) {
-            MsgToClient msg;
-            try {
-                while (true){
-                    msg = (MsgToClient) reader.readObject();
-                    System.out.println("Receiving message: " + msg.toString() + "to socket" + socket.toString());
-                    input.add(msg);
-                    System.out.println("!");
+        try (final BufferedReader reader = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+            String inputLine;
+            StringBuilder stringBuilder = new StringBuilder();
+            while ((inputLine = reader.readLine()) != null) { //blocks
+                stringBuilder.append(inputLine);
+                if (inputLine.isEmpty()) { //empty line is the end of the message
+                    final String json = stringBuilder.toString();
+                    System.out.println("Receiving message: " + json);
+                    //final Msg msg = //MAPPER.readValue(json, Msg.class);
+                    input.add(json);
+                    stringBuilder = new StringBuilder();
+                    System.out.println("Message recieved: " );
                 }
 
-            } catch(EOFException eof)
-            {
-                //end of file reached, do nothing
             }
-
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
             logger.log(Level.SEVERE, e.getMessage());
         } finally {
             close();

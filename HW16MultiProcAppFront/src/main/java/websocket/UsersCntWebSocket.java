@@ -2,8 +2,6 @@ package websocket;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import datasets.UserDataSet;
-import gsonconverters.UserDataSetConverter;
 import messagesystem.Address;
 import messagesystem.FrontendService;
 import messagesystem.MessageSystemContext;
@@ -44,7 +42,7 @@ public class UsersCntWebSocket implements FrontendService {
     @Override
     public <T> void sendResult(T count) {
         GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
+ //       builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
         Gson gson = builder.create();
 
         String value = count!=null?gson.toJson(count):gson.toJson("not found");

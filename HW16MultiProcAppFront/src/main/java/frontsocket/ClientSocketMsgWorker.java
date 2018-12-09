@@ -5,9 +5,7 @@ import serversocket.SocketMsgWorker;
 import java.io.IOException;
 import java.net.Socket;
 
-/**
- * Created by tully.
- */
+
 public class ClientSocketMsgWorker extends SocketMsgWorker{
 
     public ClientSocketMsgWorker(String host, int port) throws IOException {

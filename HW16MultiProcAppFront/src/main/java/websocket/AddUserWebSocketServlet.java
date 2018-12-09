@@ -10,13 +10,12 @@ public class AddUserWebSocketServlet  extends WebSocketServlet {
     private MessageSystemContext mscontext;
 
     public AddUserWebSocketServlet(MessageSystemContext mscontext, Address address) {
-        this.mscontext = mscontext;
-        this.address = address;
+
     }
 
     @Override
     public void configure(WebSocketServletFactory factory) {
         factory.getPolicy().setIdleTimeout(100_000_000);
-        factory.setCreator((req, resp) -> new AddUserWebSocket( mscontext, address));
+        factory.setCreator((req, resp) -> new AddUserWebSocket());
     }
 }

@@ -6,7 +6,6 @@ import datasets.AddressDataSet;
 import datasets.DataSet;
 import datasets.PhoneDataSet;
 import datasets.UserDataSet;
-import messagesystem.Address;
 import org.hibernate.*;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
@@ -17,11 +16,9 @@ import java.util.List;
 
 public class DBServiceHibernateImpl implements DBService {
     private final SessionFactory sessionFactory;
-    private final Address address;
     private final DBCache dbCache;
 
-    public DBServiceHibernateImpl(Address address, DBCache dbCache) {
-        this.address = address;
+    public DBServiceHibernateImpl( DBCache dbCache) {
         this.dbCache = dbCache;
         Configuration configuration = new Configuration().configure("hibernate.cfg.xml");
 
@@ -40,26 +37,6 @@ public class DBServiceHibernateImpl implements DBService {
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
-
-    public void init() {
-//        context.getMessageSystem().addAddressee(this);
-//        context.getMessageSystem().addWorker(this);
-    }
-
-    @Override
-    public Address getAddress() {
-        return address;
-    }
-
-    @Override
-    public Address getMSAddress() {
-        return null;
-    }
-
-    @Override
-    public void setMSAddress(Address address) {
-
-    }
 
     @Override
     public <T extends DataSet> void save(T user) {

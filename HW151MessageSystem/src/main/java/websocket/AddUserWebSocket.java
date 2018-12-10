@@ -41,6 +41,7 @@ public class AddUserWebSocket  implements FrontendService {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
         Gson gson = builder.create();
+
         DataSet user = new UserDataSet();
         try {
              user = gson.fromJson(data, UserDataSet.class);

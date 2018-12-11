@@ -1,7 +1,6 @@
 package messagesystem.message.messageimpl;
 
 import datasets.DataSet;
-import messagesystem.Address;
 import messagesystem.message.MsgToFrontend;
 import websocket.FrontendService;
 

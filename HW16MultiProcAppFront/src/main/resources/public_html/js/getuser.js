@@ -8,9 +8,10 @@ init = function () {
     }
     ws.onmessage = function (event) {
         var user =  event.data;
-        user = JSON.parse(user);
-        output.innerHTML = user.id + " " + user.name
-            + " " + user.phones + " " + user.address;
+        //user = JSON.parse(user);
+        output.innerHTML = user
+        //user.id + " " + user.name
+        //    + " " + user.phones + " " + user.address;
     }
     ws.onclose = function (event) {
     }
@@ -29,7 +30,8 @@ function fieldsToJson(){
 				obj[ name ] = value;
 			}
 		}
-		return JSON.stringify( obj );
+//		return JSON.stringify( value );
+		return value;
 }
 
 function sendMessage() {

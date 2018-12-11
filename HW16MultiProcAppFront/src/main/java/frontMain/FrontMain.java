@@ -6,7 +6,9 @@ import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
+import websocket.AddUserWebSocketServlet;
 import websocket.GetUserWebSocketServlet;
+import websocket.UsersCntWebSocketServlet;
 
 public class FrontMain {
     private final static int PORT = 8090;
@@ -18,13 +20,12 @@ public class FrontMain {
        new FrontMain().start();
     }
 
-    @SuppressWarnings("InfiniteLoopStatement")
     private void start() throws Exception {
 
         ServletContextHandler servletContextHandler = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        //servletContextHandler.addServlet(new ServletHolder(new AddUserWebSocketServlet(mscontext, addUserFrontend)), "/adduser");
+        servletContextHandler.addServlet(new ServletHolder(new AddUserWebSocketServlet()), "/adduser");
         servletContextHandler.addServlet(new ServletHolder(new GetUserWebSocketServlet()), "/getuser");
-       // servletContextHandler.addServlet(new ServletHolder(new UsersCntWebSocketServlet(mscontext, usersCountFrontend)), "/cntusrs");
+        servletContextHandler.addServlet(new ServletHolder(new UsersCntWebSocketServlet()), "/cntusrs");
 
         ResourceHandler resourceHandler = new ResourceHandler();
         Resource resource = Resource.newClassPathResource(PUBLIC_HTML);
@@ -34,7 +35,6 @@ public class FrontMain {
         server.setHandler(new HandlerList(resourceHandler, servletContextHandler));
 
         server.start();
-
         server.join();
     }
 

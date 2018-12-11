@@ -1,8 +1,5 @@
 package messagesystem.message;
 
-import messagesystem.Address;
-import messagesystem.Addressee;
-
 import java.io.Serializable;
 
 public abstract class Message implements Serializable {

@@ -5,7 +5,6 @@ init = function () {
 
 
     ws.onopen = function (event) {
-
         ws.send("0");
     }
     ws.onmessage = function (event) {
@@ -18,13 +17,5 @@ init = function () {
 }
 
 function sendMessage() {
-   // var messageField = document.getElementById("message");
-   // var userNameField = document.getElementById("username");
-   // var message = userNameField.value + ":" + messageField.value;
-   // ws.send(message);
-   // messageField.value = '';
 
-  //  ws.send("0");
-    // var textarea = document.getElementById("cntusrs");
-    // textarea.value = textarea.value + 'ping ';
 }

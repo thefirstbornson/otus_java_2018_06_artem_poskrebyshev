@@ -1,9 +1,5 @@
 package messagesystem.message;
 
-import messagesystem.Address;
-import messagesystem.Addressee;
-import messagesystem.MessageSystemContext;
-
 public abstract class MsgToMS extends Message {
     public MsgToMS(Address from, Address to) {
         super(from, to);

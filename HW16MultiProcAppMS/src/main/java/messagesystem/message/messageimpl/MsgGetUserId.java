@@ -3,7 +3,6 @@ package messagesystem.message.messageimpl;
 import datasets.DataSet;
 import datasets.UserDataSet;
 import dbService.DBService;
-import messagesystem.Address;
 import messagesystem.message.MsgToDB;
 
 public class MsgGetUserId extends MsgToDB {

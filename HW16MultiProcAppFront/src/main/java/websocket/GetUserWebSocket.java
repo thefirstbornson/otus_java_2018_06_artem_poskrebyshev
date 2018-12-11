@@ -2,7 +2,9 @@ package websocket;
 
 import com.google.gson.*;
 import frontsocket.ClientSocketMsgWorker;
-import messagesystem.JsonMsgTest;
+import messagesystem.Message;
+import messagesystem.MsgJson;
+import messagesystem.MsgJsonDBMethodWrapper;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
@@ -43,15 +45,16 @@ public class GetUserWebSocket  {
         executorService.submit(() -> {
             try {
                 while (true) {
-                    final Object msg = socketGetUser.take();
-                    System.out.println("Message handled: " + msg);
+                    final String result = socketGetUser.take();
+                    JsonObject object = new JsonParser().parse(result).getAsJsonObject();
+                    String userJson = object.get("dbServiceMethod").getAsString();
+                    sendResult(userJson);
+                    System.out.println("Message handled: " + userJson);
                 }
             } catch (InterruptedException e) {
                 logger.log(Level.SEVERE, e.getMessage());
             }
         });
-
-
     }
 
     @OnWebSocketConnect
@@ -66,25 +69,22 @@ public class GetUserWebSocket  {
     }
 
     @OnWebSocketMessage
-    public void handleRequest( String data) {
+    public void handleRequest(String data) {
         System.out.println("server get: " + data);
         Gson gson = new Gson();
-        String json = gson.toJson(new JsonMsgTest(data));
-        socketGetUser.send(json);
+
+        MsgJsonDBMethodWrapper msg = new MsgJsonDBMethodWrapper("load",data,"datasets.UserDataSet");
+        String jsonmsg = gson.toJson(msg);
+        socketGetUser.send(jsonmsg);
     }
 
     public <T> void sendResult(T user) {
-        GsonBuilder builder = new GsonBuilder();
-//        builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
-        Gson gson = builder.create();
-
-        String value = user!=null?gson.toJson(user):gson.toJson("not found");
         try {
-            session.getRemote().sendString(value);
+            session.getRemote().sendString((String)user);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("server send: "+value);
+        System.out.println("server send: "+user);
     }
 
     public Session getSession() {

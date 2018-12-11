@@ -1,7 +1,5 @@
 package messagesystem.message.messageimpl;
 
-import messagesystem.Address;
-import messagesystem.Addressee;
 import messagesystem.message.OneWayMessage;
 
 public class MsgGetDB extends OneWayMessage {

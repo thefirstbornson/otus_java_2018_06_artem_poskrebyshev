@@ -2,58 +2,77 @@ package websocket;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import frontsocket.ClientSocketMsgWorker;
+import messagesystem.MsgJsonDBMethodWrapper;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import serversocket.SocketMsgWorker;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebSocket
 public class AddUserWebSocket    {
-    private Session session;;
+    private static final Logger logger = Logger.getLogger(GetUserWebSocket.class.getName());
+    private Session session;
+    SocketMsgWorker socketAddUser;
+    public static final String HOST = "localhost";
+    public static final int SOCKET_PORT = 5050;
 
     public AddUserWebSocket() {
+        try {
+            startAddUserSocket();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    private void startAddUserSocket () throws IOException {
+        socketAddUser = new ClientSocketMsgWorker(HOST, SOCKET_PORT);
+        socketAddUser.init();
+        System.out.println("Front socket " +socketAddUser);
 
-
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(() -> {
+            try {
+                while (true) {
+                    final String result = socketAddUser.take();
+                    JsonObject object = new JsonParser().parse(result).getAsJsonObject();
+                    String userJson = object.get("dbServiceMethod").getAsString();
+                    sendResult(userJson);
+                    System.out.println("Message handled: " + userJson);
+                }
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getMessage());
+            }
+        });
     }
 
 
-
     @OnWebSocketMessage
-    public <T> void handleRequest( T msg) {
-        String data = (String) msg;
-
-        System.out.println("server get: " + data);
-
-//        GsonBuilder builder = new GsonBuilder();
-//        builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
-//        Gson gson = builder.create();
-//        DataSet user = new UserDataSet();
-//        try {
-//             user = gson.fromJson(data, UserDataSet.class);
-//        } catch ( JsonSyntaxException e) {
-//            e.printStackTrace();
-//        }
-
-//            Message message = new MsgAddUser(getSocket(), context.getDbSocket(), user);
-//            context.getMessageSystem().sendMessage(message);
+    public void handleRequest( String user) {
+        System.out.println("server get: " + user);
+        Gson gson = new Gson();
+        MsgJsonDBMethodWrapper msgJsnWrp = new MsgJsonDBMethodWrapper("save",user);
+        String jsonmsg = gson.toJson(msgJsnWrp);
+        socketAddUser.send(jsonmsg);
     }
 
 
     public <T> void sendResult(T user) {
-        GsonBuilder builder = new GsonBuilder();
-//        builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
-        Gson gson = builder.create();
-
-        String value = user!=null?gson.toJson(user):gson.toJson("not found");
         try {
-            session.getRemote().sendString(value);
+            session.getRemote().sendString((String)user);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("server send: "+value);
+        System.out.println("server send: "+user);
     }
 
 

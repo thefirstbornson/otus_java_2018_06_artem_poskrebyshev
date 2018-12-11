@@ -10,13 +10,13 @@ import java.lang.reflect.Type;
 public class JavaLangClassConverter implements  JsonDeserializer<Class> {
     @Override
     public Class deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-       String stringFromJson = json.getAsString();
-        Class act=null;
+       String classFromJson = json.getAsString();
+        Class klazz=null;
         try {
-            act = Class.forName("datasets."+stringFromJson);
+            klazz = Class.forName(classFromJson);
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-        return act;
+        return klazz;
     }
 }

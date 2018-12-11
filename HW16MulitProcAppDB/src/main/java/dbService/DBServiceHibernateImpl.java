@@ -73,6 +73,11 @@ public class DBServiceHibernateImpl implements DBService {
     }
 
     @Override
+    public <T extends DataSet> int numberOfUsers(Class<T> clazz) {
+        return readAll(clazz).size();
+    }
+
+    @Override
     public void close() throws Exception {
         sessionFactory.close();
     }

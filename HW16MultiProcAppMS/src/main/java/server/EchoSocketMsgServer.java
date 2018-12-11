@@ -1,7 +1,11 @@
 package server;
 
 import com.google.gson.Gson;
-import messagesystem.JsonMsgTest;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import messagesystem.MsgJson;
+import messagesystem.Message;
+import messagesystem.MsgJsonDBMethodWrapper;
 import serversocket.MsgWorker;
 import serversocket.SocketMsgWorker;
 
@@ -62,13 +66,17 @@ public class EchoSocketMsgServer {
                         db_id = workerMapElement.getKey();
                         System.out.println("DB Socket ID - " + db_id);
                     } else {
-                        JsonMsgTest fromJsonObj =gson.fromJson(msg, JsonMsgTest.class);
-                        int addressTo = fromJsonObj.getAddressTo();
-                        String messageFromJsonObj = fromJsonObj.getMessage();
+                        JsonParser parser = new JsonParser();
+                        JsonObject object = parser.parse(msg).getAsJsonObject();
+                        int addressTo = object.get("addressTo").getAsInt();
+//                        MsgJsonDBMethodWrapper fromJsonObj =gson.fromJson(msg, MsgJsonDBMethodWrapper.class);
+//                        int addressTo = fromJsonObj.getAddressTo();
+//                        String messageFromJsonObj = fromJsonObj.getDbServiceMethod();
                         if (addressTo<0){
-                            String json = gson.toJson(
-                                    new JsonMsgTest(db_id,workerMapElement.getKey() ,messageFromJsonObj));
-                            addresseeMap.get(db_id).send(json);
+                            MsgJsonDBMethodWrapper fromJsonObj =gson.fromJson(msg, MsgJsonDBMethodWrapper.class);
+                            fromJsonObj.setAddressTo(db_id);
+                            fromJsonObj.setAddressFrom(workerMapElement.getKey());
+                            addresseeMap.get(db_id).send(gson.toJson(fromJsonObj));
 
                         } else{
                             addresseeMap.get(addressTo).send(msg);

@@ -2,56 +2,80 @@ package websocket;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import messagesystem.Address;
-import messagesystem.FrontendService;
-import messagesystem.MessageSystemContext;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import datasets.UserDataSet;
+import frontsocket.ClientSocketMsgWorker;
+import messagesystem.MsgJsonDBMethodWrapper;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import serversocket.SocketMsgWorker;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @WebSocket
-public class UsersCntWebSocket implements FrontendService {
+public class UsersCntWebSocket {
+    private static final Logger logger = Logger.getLogger(GetUserWebSocket.class.getName());
     private Session session;
-    private Address address;
-    private MessageSystemContext context;
+    SocketMsgWorker socketUsersCnt;
+    public static final String HOST = "localhost";
+    public static final int SOCKET_PORT = 5050;
 
-    public UsersCntWebSocket(MessageSystemContext context, Address address) {
-        this.context = context;
-        this.address = address;
-        init();
-    }
     public UsersCntWebSocket() {
-    }
-
-    @Override
-    @OnWebSocketMessage
-    public <T> void handleRequest( T msg) {
-        String data = (String) msg;
-
-        System.out.println("server get: " + data);
-
-//
-//        Message message = new MsgUserCount(getSocket(), context.getDbSocket());
-//        context.getMessageSystem().sendMessage(message);
-    }
-
-    @Override
-    public <T> void sendResult(T count) {
-        GsonBuilder builder = new GsonBuilder();
- //       builder.registerTypeAdapter(UserDataSet.class, new UserDataSetConverter());
-        Gson gson = builder.create();
-
-        String value = count!=null?gson.toJson(count):gson.toJson("not found");
         try {
-            session.getRemote().sendString(value);
+            startUsersCntSocket();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("server send: "+value);
+    }
+
+    private void startUsersCntSocket() throws IOException {
+        socketUsersCnt = new ClientSocketMsgWorker(HOST, SOCKET_PORT);
+        socketUsersCnt.init();
+        System.out.println("Front socket " +socketUsersCnt);
+
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        executorService.submit(() -> {
+            try {
+                while (true) {
+                    final String result = socketUsersCnt.take();
+                    JsonObject object = new JsonParser().parse(result).getAsJsonObject();
+                    String userJson = object.get("dbServiceMethod").getAsString();
+                    sendResult(userJson);
+                    System.out.println("Message handled: " + userJson);
+                }
+            } catch (InterruptedException e) {
+                logger.log(Level.SEVERE, e.getMessage());
+            }
+        });
+    }
+
+    @OnWebSocketMessage
+    public void handleRequest( String data) {
+        System.out.println("server get: " + data);
+
+        Gson gson = new Gson();
+        MsgJsonDBMethodWrapper msgJsnWrp = new MsgJsonDBMethodWrapper("numberOfUsers","datasets.UserDataSet");
+        String jsonmsg = gson.toJson(msgJsnWrp);
+        socketUsersCnt.send(jsonmsg);
+    }
+
+
+    public <T> void sendResult(T count) {
+
+        try {
+            session.getRemote().sendString((String)count);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("server send: "+count);
     }
 
     @OnWebSocketConnect
@@ -72,32 +96,6 @@ public class UsersCntWebSocket implements FrontendService {
     public void onClose(Session session, int status, String reason) {
         System.out.println(session.getRemoteAddress().getHostString() + " closed!");
     }
-
-    @Override
-    public void init() {
-//        context.getMessageSystem().addAddressee(this);
-//        context.getMessageSystem().addWorker(this);
-    }
-
-    @Override
-    public Address getAddress() {
-        return address;
-    }
-
-    @Override
-    public Address getMSAddress() {
-        return null;
-    }
-
-    @Override
-    public void setMSAddress(Address address) {
-
-    }
-
-
-//    public MessageSystem getMS() {
-//        return context.getMessageSystem();
-//    }
 
 
 }

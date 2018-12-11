@@ -2,7 +2,6 @@ package messagesystem.message.messageimpl;
 
 import datasets.DataSet;
 import dbService.DBService;
-import messagesystem.Address;
 import messagesystem.message.MsgToDB;
 
 public class MsgAddUser extends MsgToDB {

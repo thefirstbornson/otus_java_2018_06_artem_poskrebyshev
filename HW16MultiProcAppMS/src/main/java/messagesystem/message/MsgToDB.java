@@ -1,8 +1,5 @@
 package messagesystem.message;
 
-import messagesystem.Address;
-import messagesystem.Addressee;
-
 public abstract class MsgToDB extends Message {
     public MsgToDB(Address from, Address to) {
         super(from, to);

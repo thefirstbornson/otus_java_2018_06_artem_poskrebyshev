@@ -1,9 +1,5 @@
 package messagesystem.message;
 
-import messagesystem.Address;
-import messagesystem.Addressee;
-import messagesystem.FrontendService;
-
 public abstract class MsgToFrontend extends Message {
     public MsgToFrontend(Address from, Address to) {
         super(from, to);

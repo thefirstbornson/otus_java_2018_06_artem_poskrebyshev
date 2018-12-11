@@ -1,8 +1,5 @@
 package messagesystem.message;
 
-import messagesystem.Address;
-import messagesystem.FrontendService;
-
 public class MsgGetDBAnswer extends MsgToFrontend {
     Address db;
 

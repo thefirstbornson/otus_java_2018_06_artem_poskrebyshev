@@ -1,8 +1,5 @@
 package messagesystem.message;
 
-import messagesystem.Address;
-import messagesystem.MessageSystemContext;
-
 public class MsgGetDB extends MsgToMS {
     public MsgGetDB(Address from, Address to) {
         super(from, to);

@@ -5,16 +5,19 @@ public class MsgJsonDBMethodWrapper {
     private int addressFrom;
     private String dbServiceMethod;
     private String[] dbServiceMethodParams;
+    private String[] dbServiceMethodParamTypes;
 
-    public MsgJsonDBMethodWrapper(int addressTo, int addressFrom, String dbServiceMethod, String[] dbServiceMethodParams) {
+    public MsgJsonDBMethodWrapper(int addressTo, int addressFrom, String dbServiceMethod
+                                , String[] dbServiceMethodParams, String[]dbServiceMethodParamTypes) {
         this.addressTo = addressTo;
         this.addressFrom = addressFrom;
         this.dbServiceMethod = dbServiceMethod;
         this.dbServiceMethodParams = dbServiceMethodParams;
+        this.dbServiceMethodParamTypes =dbServiceMethodParamTypes;
     }
 
-    public MsgJsonDBMethodWrapper(String dbServiceMethod, String ... dbServiceMethodParams) {
-        this(-1,-1,dbServiceMethod,dbServiceMethodParams);
+    public MsgJsonDBMethodWrapper(String dbServiceMethod, String [] dbServiceMethodParams, String[]dbServiceMethodParamTypes) {
+        this(-1,-1,dbServiceMethod,dbServiceMethodParams,dbServiceMethodParamTypes);
 
     }
     public MsgJsonDBMethodWrapper() {
@@ -32,11 +35,14 @@ public class MsgJsonDBMethodWrapper {
         return dbServiceMethod;
     }
 
-    public String[] getDBServiceMethodParams() {
+    public String[] getDbServiceMethodParams() {
         return this.dbServiceMethodParams;
     }
 
-    public void setAddressTo(int addressTo) {
+    public String[] getDbServiceMethodParamTypes() {
+        return dbServiceMethodParamTypes;
+    }
+        public void setAddressTo(int addressTo) {
         this.addressTo = addressTo;
     }
 
@@ -52,3 +58,4 @@ public class MsgJsonDBMethodWrapper {
         this.dbServiceMethodParams = dbServiceMethodParams;
     }
 }
+

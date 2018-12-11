@@ -1,7 +1,6 @@
 package websocket;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import frontsocket.ClientSocketMsgWorker;
@@ -60,15 +59,19 @@ public class AddUserWebSocket    {
     public void handleRequest( String user) {
         System.out.println("server get: " + user);
         Gson gson = new Gson();
-        MsgJsonDBMethodWrapper msgJsnWrp = new MsgJsonDBMethodWrapper("save",user);
+        MsgJsonDBMethodWrapper msgJsnWrp = new MsgJsonDBMethodWrapper("save"
+                                                                        ,new String[]{user}
+                                                                        ,new String[]{"datasets.UserDataSet"});
         String jsonmsg = gson.toJson(msgJsnWrp);
         socketAddUser.send(jsonmsg);
     }
 
 
     public <T> void sendResult(T user) {
+        String resultMsg;
         try {
-            session.getRemote().sendString((String)user);
+            resultMsg = user.equals("null")?"user saved":"user has not saved";
+            session.getRemote().sendString(resultMsg);
         } catch (IOException e) {
             e.printStackTrace();
         }

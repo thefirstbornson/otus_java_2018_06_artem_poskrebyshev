@@ -1,10 +1,8 @@
 package websocket;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import datasets.UserDataSet;
 import frontsocket.ClientSocketMsgWorker;
 import messagesystem.MsgJsonDBMethodWrapper;
 import org.eclipse.jetty.websocket.api.Session;
@@ -62,7 +60,9 @@ public class UsersCntWebSocket {
         System.out.println("server get: " + data);
 
         Gson gson = new Gson();
-        MsgJsonDBMethodWrapper msgJsnWrp = new MsgJsonDBMethodWrapper("numberOfUsers","datasets.UserDataSet");
+        MsgJsonDBMethodWrapper msgJsnWrp = new MsgJsonDBMethodWrapper("numberOfUsers"
+                                                                        ,new String[]{"datasets.UserDataSet"}
+                                                                        ,new String[]{"Class"});
         String jsonmsg = gson.toJson(msgJsnWrp);
         socketUsersCnt.send(jsonmsg);
     }

@@ -1,9 +1,9 @@
 package websocket;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import frontsocket.ClientSocketMsgWorker;
-import messagesystem.Message;
-import messagesystem.MsgJson;
 import messagesystem.MsgJsonDBMethodWrapper;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
@@ -73,14 +73,18 @@ public class GetUserWebSocket  {
         System.out.println("server get: " + data);
         Gson gson = new Gson();
 
-        MsgJsonDBMethodWrapper msg = new MsgJsonDBMethodWrapper("load",data,"datasets.UserDataSet");
+        MsgJsonDBMethodWrapper msg =
+                new MsgJsonDBMethodWrapper("load",new String[] {data ,"datasets.UserDataSet"}
+                                          ,new String[] {"int","Class"} );
         String jsonmsg = gson.toJson(msg);
         socketGetUser.send(jsonmsg);
     }
 
     public <T> void sendResult(T user) {
+        String resultMsg;
         try {
-            session.getRemote().sendString((String)user);
+            resultMsg = user.equals("null")?"No such user here": (String)user;
+            session.getRemote().sendString(resultMsg);
         } catch (IOException e) {
             e.printStackTrace();
         }

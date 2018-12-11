@@ -3,8 +3,6 @@ package server;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import messagesystem.MsgJson;
-import messagesystem.Message;
 import messagesystem.MsgJsonDBMethodWrapper;
 import serversocket.MsgWorker;
 import serversocket.SocketMsgWorker;
@@ -69,9 +67,6 @@ public class EchoSocketMsgServer {
                         JsonParser parser = new JsonParser();
                         JsonObject object = parser.parse(msg).getAsJsonObject();
                         int addressTo = object.get("addressTo").getAsInt();
-//                        MsgJsonDBMethodWrapper fromJsonObj =gson.fromJson(msg, MsgJsonDBMethodWrapper.class);
-//                        int addressTo = fromJsonObj.getAddressTo();
-//                        String messageFromJsonObj = fromJsonObj.getDbServiceMethod();
                         if (addressTo<0){
                             MsgJsonDBMethodWrapper fromJsonObj =gson.fromJson(msg, MsgJsonDBMethodWrapper.class);
                             fromJsonObj.setAddressTo(db_id);

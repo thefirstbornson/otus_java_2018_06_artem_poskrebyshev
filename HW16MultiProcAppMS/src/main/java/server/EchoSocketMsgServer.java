@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -23,7 +24,6 @@ public class EchoSocketMsgServer {
 
     private static final int THREADS_NUMBER = 1;
     private static final int PORT = 5050;
-    private static final int MIRROR_DELAY_MS = 100;
     private int db_id;
     private int id = 0;
 
@@ -40,16 +40,14 @@ public class EchoSocketMsgServer {
 
     public void start() throws Exception {
         executor.submit(this::echo);
-
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             logger.info("Server started on port: " + serverSocket.getLocalPort());
             while (!executor.isShutdown()) {
                 Socket socket = serverSocket.accept(); //blocks
-                System.out.println("Socket opened " + socket.toString());
+                logger.log(Level.INFO, "Socket opened " + socket.toString());
                 SocketMsgWorker worker = new SocketMsgWorker(socket);
                 worker.init();
                 addresseeMap.put(id++, worker);
-                System.out.println(addresseeMap);
             }
         }
     }
@@ -62,7 +60,7 @@ public class EchoSocketMsgServer {
                 if (msg != null) {
                     if (msg.equals("initDB")) {
                         db_id = workerMapElement.getKey();
-                        System.out.println("DB Socket ID - " + db_id);
+                        logger.log(Level.INFO, "DB Socket ID - " + db_id);
                     } else {
                         JsonParser parser = new JsonParser();
                         JsonObject object = parser.parse(msg).getAsJsonObject();
@@ -72,7 +70,6 @@ public class EchoSocketMsgServer {
                             fromJsonObj.setAddressTo(db_id);
                             fromJsonObj.setAddressFrom(workerMapElement.getKey());
                             addresseeMap.get(db_id).send(gson.toJson(fromJsonObj));
-
                         } else{
                             addresseeMap.get(addressTo).send(msg);
                         }

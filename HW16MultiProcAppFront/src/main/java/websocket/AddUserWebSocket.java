@@ -36,7 +36,7 @@ public class AddUserWebSocket    {
     private void startAddUserSocket () throws IOException {
         socketAddUser = new ClientSocketMsgWorker(HOST, SOCKET_PORT);
         socketAddUser.init();
-        System.out.println("Front socket " +socketAddUser);
+        logger.log(Level.INFO, "Front socket " +socketAddUser);
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.submit(() -> {
@@ -46,7 +46,7 @@ public class AddUserWebSocket    {
                     JsonObject object = new JsonParser().parse(result).getAsJsonObject();
                     String userJson = object.get("dbServiceMethod").getAsString();
                     sendResult(userJson);
-                    System.out.println("Message handled: " + userJson);
+                    logger.log(Level.INFO, "Message handled: " + userJson);
                 }
             } catch (InterruptedException e) {
                 logger.log(Level.SEVERE, e.getMessage());
@@ -57,7 +57,7 @@ public class AddUserWebSocket    {
 
     @OnWebSocketMessage
     public void handleRequest( String user) {
-        System.out.println("server get: " + user);
+        System.out.println("server get from front: " + user);
         Gson gson = new Gson();
         MsgJsonDBMethodWrapper msgJsnWrp = new MsgJsonDBMethodWrapper("save"
                                                                         ,new String[]{user}
@@ -75,14 +75,14 @@ public class AddUserWebSocket    {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("server send: "+user);
+        logger.log(Level.INFO, "server send to front: "+user);
     }
 
 
 
     @OnWebSocketConnect
     public void onConnect(Session session) throws IOException {
-        System.out.println(session.getRemoteAddress().getHostString() + " connected!");
+        logger.log(Level.INFO, session.getRemoteAddress().getHostString() + " connected!");
         setSession(session);
     }
 
@@ -96,7 +96,7 @@ public class AddUserWebSocket    {
 
     @OnWebSocketClose
     public void onClose(Session session, int status, String reason) {
-        System.out.println(session.getRemoteAddress().getHostString() + " closed!");
+        logger.log(Level.INFO, session.getRemoteAddress().getHostString() + " closed!");
     }
 
 

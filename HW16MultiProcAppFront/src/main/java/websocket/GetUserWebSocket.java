@@ -39,7 +39,7 @@ public class GetUserWebSocket  {
     private void startGetUserSocket () throws IOException {
         socketGetUser = new ClientSocketMsgWorker(HOST, SOCKET_PORT);
         socketGetUser.init();
-        System.out.println("Front socket " +socketGetUser);
+        logger.log(Level.INFO, "Front socket " +socketGetUser);
 
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.submit(() -> {
@@ -49,7 +49,7 @@ public class GetUserWebSocket  {
                     JsonObject object = new JsonParser().parse(result).getAsJsonObject();
                     String userJson = object.get("dbServiceMethod").getAsString();
                     sendResult(userJson);
-                    System.out.println("Message handled: " + userJson);
+                    logger.log(Level.INFO, "Message handled: " + userJson);
                 }
             } catch (InterruptedException e) {
                 logger.log(Level.SEVERE, e.getMessage());
@@ -59,24 +59,25 @@ public class GetUserWebSocket  {
 
     @OnWebSocketConnect
     public void onConnect(Session session) throws IOException {
-        System.out.println(session.getRemoteAddress().getHostString() + " connected!");
+        logger.log(Level.INFO, session.getRemoteAddress().getHostString() + " connected!");
         setSession(session);
     }
 
     @OnWebSocketClose
     public void onClose(Session session, int status, String reason) {
-        System.out.println(session.getRemoteAddress().getHostString() + " closed!");
+        logger.log(Level.INFO, session.getRemoteAddress().getHostString() + " closed!");
     }
 
     @OnWebSocketMessage
     public void handleRequest(String data) {
-        System.out.println("server get: " + data);
+        logger.log(Level.INFO, "server get from front: " + data);
         Gson gson = new Gson();
 
         MsgJsonDBMethodWrapper msg =
                 new MsgJsonDBMethodWrapper("load",new String[] {data ,"datasets.UserDataSet"}
                                           ,new String[] {"int","Class"} );
         String jsonmsg = gson.toJson(msg);
+        logger.log(Level.INFO, "server send query to DB: " + data);
         socketGetUser.send(jsonmsg);
     }
 
@@ -88,7 +89,7 @@ public class GetUserWebSocket  {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("server send: "+user);
+        logger.log(Level.INFO, "server send to Front: "+user);
     }
 
     public Session getSession() {

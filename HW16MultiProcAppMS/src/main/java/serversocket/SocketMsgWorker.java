@@ -63,7 +63,6 @@ public class SocketMsgWorker implements MsgWorker {
         try (PrintWriter writer = new PrintWriter(socket.getOutputStream(), true)) {
             while (socket.isConnected()) {
                 final String msg = output.take(); //blocks
-                System.out.println("Sending message: " + msg);
                 writer.println(msg);
                 writer.println();//line with json + an empty line
             }
@@ -81,10 +80,9 @@ public class SocketMsgWorker implements MsgWorker {
                 stringBuilder.append(inputLine);
                 if (inputLine.isEmpty()) { //empty line is the end of the message
                     final String json = stringBuilder.toString();
-                    System.out.println("Receiving message: " + json);
+                    logger.log(Level.INFO, "Receiving message: " + json);
                     input.add(json);
-                    stringBuilder = new StringBuilder();
-                    System.out.println("Message recieved: " );
+                    stringBuilder = new StringBuilder();;
                 }
 
             }

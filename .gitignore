@@ -1,5 +1,12 @@
 .idea
 **/.idea
 **.iml
+
 **/target
+**/log/
+**/target/
+
+#common
+**/out
+**.class
 

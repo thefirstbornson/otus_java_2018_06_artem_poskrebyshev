@@ -1,13 +1,9 @@
 package messagesystem;
 
-public class MsgJson implements Message {
+public class MsgJsonDBAnswer implements Message{
     private int addressTo;
     private int addressFrom;
     private String message;
-
-    public MsgJson(String message) {
-        this(-1,-1,message);
-    }
 
     @Override
     public int getAddressTo() {
@@ -18,7 +14,7 @@ public class MsgJson implements Message {
         return addressFrom;
     }
 
-    public MsgJson(int addressTo, int addressFrom, String message) {
+    public MsgJsonDBAnswer(int addressTo, int addressFrom, String message) {
         this.addressTo = addressTo;
         this.addressFrom = addressFrom;
         this.message = message;

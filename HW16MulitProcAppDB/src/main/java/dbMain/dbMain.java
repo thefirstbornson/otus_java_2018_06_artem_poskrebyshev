@@ -10,6 +10,7 @@ import dbService.DBServiceHibernateImpl;
 import dbsockets.DBSocketMsgWorker;
 import gsonconverters.JavaLangClassConverter;
 import gsonconverters.UserDataSetConverter;
+import messagesystem.MsgJsonDBAnswer;
 import messagesystem.MsgJsonDBMethodWrapper;
 import org.apache.commons.lang3.ClassUtils;
 import serversocket.SocketMsgWorker;
@@ -40,23 +41,11 @@ public class dbMain {
         DBCache dbCache = new DBCacheInMemory(50, 500, 25);
         DBService dbService = new DBServiceHibernateImpl(dbCache);
 
-
-//        System.out.println(getDBServiseResult(dbService,"save"
-//               ,new String[]{"{\"name\":\"alex\",\"age\":\"1\",\"phones\":\"1234\",\"address\":\"asdfs\"}"}
-//               ,new String[]{"datasets.UserDataSet"} ));
-//        System.out.println(getDBServiseResult(dbService,"load"
-//                ,new String[]{"1","datasets.UserDataSet"}
-//                ,new String[]{"int","Class"} ));
-//        System.out.println( getDBServiseResult(dbService,"numberOfUsers"
-////                ,new String[]{"datasets.UserDataSet"}
-////                ,new String[]{"Class"}));
-
         ExecutorService executorService = Executors.newSingleThreadExecutor();
         executorService.submit(() -> {
             try {
                 while (true) {
                     final String msg = dbSocket.take();
-
                     Gson gson = new GsonBuilder()
                                         .registerTypeAdapter(UserDataSet.class, new UserDataSetConverter())
                                         .registerTypeAdapter(Class.class, new JavaLangClassConverter()).create();
@@ -66,11 +55,9 @@ public class dbMain {
                                                       ,fromJsonObj.getDbServiceMethod()
                                                       ,fromJsonObj.getDbServiceMethodParams()
                                                       ,fromJsonObj.getDbServiceMethodParamTypes());
-                    String json=gson.toJson(new MsgJsonDBMethodWrapper(fromJsonObj.getAddressFrom()
-                                                                      ,fromJsonObj.getAddressTo()
-                                                                      ,result
-                                                                      ,new String[]{}
-                                                                      ,new String[]{}));
+                    String json=gson.toJson(new MsgJsonDBAnswer(fromJsonObj.getAddressFrom()
+                                                               ,fromJsonObj.getAddressTo()
+                                                               ,result));
                     logger.log(Level.INFO, "Message handled: " + json);
                     dbSocket.send(json);
                 }
@@ -83,10 +70,10 @@ public class dbMain {
     }
 
     private String getDBServiseResult (DBService dbService, String methodName
-                                     , String[] methodsParams, String[] typesOfMethodParams){
+                                      ,String[] methodsParams, String[] typesOfMethodParams){
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(UserDataSet.class, new UserDataSetConverter())
-                .registerTypeAdapter(Class.class, new JavaLangClassConverter()).create();
+                                .registerTypeAdapter(UserDataSet.class, new UserDataSetConverter())
+                                .registerTypeAdapter(Class.class, new JavaLangClassConverter()).create();
 
         Object[] paramObj = new Object[typesOfMethodParams.length];
         Class[]  typesObj = new Class[typesOfMethodParams.length];

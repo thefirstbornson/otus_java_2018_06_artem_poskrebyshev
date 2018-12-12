@@ -44,7 +44,7 @@ public class AddUserWebSocket    {
                 while (true) {
                     final String result = socketAddUser.take();
                     JsonObject object = new JsonParser().parse(result).getAsJsonObject();
-                    String userJson = object.get("dbServiceMethod").getAsString();
+                    String userJson = object.get("message").getAsString();
                     sendResult(userJson);
                     logger.log(Level.INFO, "Message handled: " + userJson);
                 }

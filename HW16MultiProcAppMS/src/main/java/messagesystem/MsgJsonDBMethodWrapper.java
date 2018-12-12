@@ -1,6 +1,6 @@
 package messagesystem;
 
-public class MsgJsonDBMethodWrapper {
+public class MsgJsonDBMethodWrapper implements Message{
     private int addressTo;
     private int addressFrom;
     private String dbServiceMethod;
@@ -18,44 +18,40 @@ public class MsgJsonDBMethodWrapper {
 
     public MsgJsonDBMethodWrapper(String dbServiceMethod, String [] dbServiceMethodParams, String[]dbServiceMethodParamTypes) {
         this(-1,-1,dbServiceMethod,dbServiceMethodParams,dbServiceMethodParamTypes);
-
-    }
-    public MsgJsonDBMethodWrapper() {
     }
 
+    public MsgJsonDBMethodWrapper() {}
+
+    @Override
     public int getAddressTo() {
         return addressTo;
     }
-
-    public int getAddressFrom() {
+    @Override
+    public int getAddressFrom(){
         return addressFrom;
     }
-
-    public String getDbServiceMethod() {
+    @Override
+    public String   getMessage() { return getDbServiceMethod();}
+    public String   getDbServiceMethod() {
         return dbServiceMethod;
     }
-
     public String[] getDbServiceMethodParams() {
         return this.dbServiceMethodParams;
     }
-
     public String[] getDbServiceMethodParamTypes() {
         return dbServiceMethodParamTypes;
     }
-        public void setAddressTo(int addressTo) {
+
+    public void setAddressTo(int addressTo) {
         this.addressTo = addressTo;
     }
-
     public void setAddressFrom(int addressFrom) {
         this.addressFrom = addressFrom;
     }
-
     public void setDbServiceMethod(String dbServiceMethod) {
         this.dbServiceMethod = dbServiceMethod;
     }
-
-    public void setDbServiceMethodParams(String[] dbServiceMethodParams) {
-        this.dbServiceMethodParams = dbServiceMethodParams;
+    public void setDbServiceMethodParams(String[] dbServiceMethodParams) {this.dbServiceMethodParams = dbServiceMethodParams;
     }
 }
 

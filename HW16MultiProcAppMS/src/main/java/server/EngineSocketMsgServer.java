@@ -19,8 +19,8 @@ import java.util.logging.Logger;
 /**
  * Created by tully.
  */
-public class EchoSocketMsgServer {
-    private static final Logger logger = Logger.getLogger(EchoSocketMsgServer.class.getName());
+public class EngineSocketMsgServer {
+    private static final Logger logger = Logger.getLogger(EngineSocketMsgServer.class.getName());
 
     private static final int THREADS_NUMBER = 1;
     private static final int PORT = 5050;
@@ -31,11 +31,10 @@ public class EchoSocketMsgServer {
     private final Map<Integer, MsgWorker> addresseeMap;
     private Gson gson;
 
-    public EchoSocketMsgServer() {
+    public EngineSocketMsgServer() {
         executor = Executors.newFixedThreadPool(THREADS_NUMBER);
         addresseeMap = new ConcurrentHashMap<>();
         gson = new Gson();
-
     }
 
     public void start() throws Exception {

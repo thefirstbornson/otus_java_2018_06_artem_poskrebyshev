@@ -1,6 +1,6 @@
 package serverMain;
 
-import server.EchoSocketMsgServer;
+import server.EngineSocketMsgServer;
 
 public class ServerMain {
     public static void main(String[] args) throws Exception {
@@ -13,7 +13,7 @@ public class ServerMain {
 
 //        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
 //        ObjectName name = new ObjectName("ru.otus:type=Server");
-        EchoSocketMsgServer server = new EchoSocketMsgServer();
+        EngineSocketMsgServer server = new EngineSocketMsgServer();
 //        mbs.registerMBean(server, name);
 
         server.start();

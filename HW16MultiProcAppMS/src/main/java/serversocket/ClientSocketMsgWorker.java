@@ -1,6 +1,4 @@
-package frontsocket;
-
-import serversocket.SocketMsgWorker;
+package serversocket;
 
 import java.io.IOException;
 import java.net.Socket;

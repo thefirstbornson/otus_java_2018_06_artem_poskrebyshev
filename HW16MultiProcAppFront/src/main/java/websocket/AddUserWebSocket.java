@@ -3,13 +3,13 @@ package websocket;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import frontsocket.ClientSocketMsgWorker;
 import messagesystem.MsgJsonDBMethodWrapper;
 import org.eclipse.jetty.websocket.api.Session;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketClose;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketConnect;
 import org.eclipse.jetty.websocket.api.annotations.OnWebSocketMessage;
 import org.eclipse.jetty.websocket.api.annotations.WebSocket;
+import serversocket.ClientSocketMsgWorker;
 import serversocket.SocketMsgWorker;
 
 import java.io.IOException;
